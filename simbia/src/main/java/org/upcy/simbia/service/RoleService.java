@@ -50,12 +50,13 @@ public class RoleService {
         return null;
     }
 
-    public boolean delete(Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void delete(Long id) {
+        repository.findById(id)
+                .map(existing -> {
+                    existing.setActive("0");
+                    return  repository.save(existing);
+                })
+                .orElseThrow(() -> new RuntimeException("Role not found with id " + id));
     }
 
     private RoleDto toDto(Role role) {

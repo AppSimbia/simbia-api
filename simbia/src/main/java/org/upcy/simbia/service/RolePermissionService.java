@@ -45,10 +45,11 @@ public class RolePermissionService {
     }
 
     public void delete(Long id) {
-        RolePermission bp = findById(id);
-        if (!"0".equals(bp.getActive())) {
-            bp.setActive("0");
-            rolePermissionRepository.save(bp);
-        }
+        rolePermissionRepository.findById(id)
+                .map(existing -> {
+                    existing.setActive("0");
+                    return rolePermissionRepository.save(existing);
+                })
+                .orElseThrow(() -> new RuntimeException("RolePermission not found with id " + id));
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.contract.PermissionContract;
 import org.upcy.simbia.dto.PermissionDto;
+import org.upcy.simbia.model.Permission;
 import org.upcy.simbia.service.PermissionService;
 
 import java.util.List;
@@ -47,10 +48,7 @@ public class PermissionController implements PermissionContract {
 
     @Override
     public ResponseEntity<Void> delete(Long id) {
-        boolean deleted = service.delete(id);
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
-        }
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

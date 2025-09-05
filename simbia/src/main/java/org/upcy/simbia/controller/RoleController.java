@@ -3,6 +3,7 @@ package org.upcy.simbia.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.contract.RoleContract;
+import org.upcy.simbia.dto.PermissionDto;
 import org.upcy.simbia.dto.RoleDto;
 import org.upcy.simbia.service.RoleService;
 
@@ -47,10 +48,7 @@ public class RoleController implements RoleContract {
 
     @Override
     public ResponseEntity<Void> delete(Long id) {
-        boolean deleted = service.delete(id);
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
-        }
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

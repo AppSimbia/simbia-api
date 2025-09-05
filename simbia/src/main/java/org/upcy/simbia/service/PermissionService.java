@@ -49,12 +49,13 @@ public class PermissionService {
         return null;
     }
 
-    public boolean delete(Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void delete(Long id) {
+        repository.findById(id)
+                .map(existing -> {
+                    existing.setActive("0");
+                    return repository.save(existing);
+                })
+                .orElseThrow(() -> new RuntimeException("Permission not found with id " + id));
     }
 
     private PermissionDto toDto(Permission permission) {
