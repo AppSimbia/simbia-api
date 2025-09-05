@@ -17,7 +17,6 @@ public class BenefitController implements BenefitContract {
 
     @Override
     public ResponseEntity<BenefitDto> create(BenefitDto dto) {
-        // DTO não tem id nem active, Service define active="1"
         return ResponseEntity.ok(service.create(dto));
     }
 
@@ -33,7 +32,6 @@ public class BenefitController implements BenefitContract {
 
     @Override
     public ResponseEntity<BenefitDto> update(Long id, BenefitDto dto) {
-        // Atualiza apenas nome e descrição
         return ResponseEntity.ok(service.update(id, dto));
     }
 

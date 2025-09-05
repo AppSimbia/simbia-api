@@ -23,7 +23,7 @@ public class BenefitService {
         Benefit entity = new Benefit();
         entity.setBenefitName(dto.getBenefitName());
         entity.setDescription(dto.getDescription() != null ? dto.getDescription() : "");
-        entity.setActive("1"); // Conta sempre ativa na criação
+        entity.setActive("1");
 
         Benefit saved = repository.save(entity);
         return toDto(saved);
@@ -47,7 +47,6 @@ public class BenefitService {
                 .orElseThrow(() -> new RuntimeException("Benefit não encontrado"));
         entity.setBenefitName(dto.getBenefitName());
         entity.setDescription(dto.getDescription());
-        // não altera active nem id
         return toDto(repository.save(entity));
     }
 
