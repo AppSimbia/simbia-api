@@ -51,10 +51,12 @@ public class BenefitService {
     }
 
     public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Benefit não encontrado");
-        }
-        repository.deleteById(id);
+        repository.findById(id)
+                .map(existing -> {
+                    existing.setActive("0");
+                    return repository.save(existing);
+                })
+                .orElseThrow(() -> new RuntimeException("Benefit not found with id " + id));
     }
 
     private BenefitDto toDto(Benefit entity) {
