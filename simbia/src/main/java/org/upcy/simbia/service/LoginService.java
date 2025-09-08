@@ -55,6 +55,9 @@ public class LoginService {
     public void updateLastLogin(Long id) {
         loginRepository.findById(id).ifPresent(existing -> {
             existing.setLastLogin(new Date());
+            if (existing.getIsFirstLogin().equals("1")) {
+                existing.setIsFirstLogin("0");
+            };
             loginRepository.save(existing);
         });
     }

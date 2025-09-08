@@ -52,11 +52,12 @@ public class IndustryTypeService {
         return toDto(repository.save(entity));
     }
 
-    public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("IndustryType não encontrado");
-        }
-        repository.deleteById(id);
+    public boolean delete(Long id) {
+        return repository.findById(id).map(existing -> {
+            existing.setActive("0");
+            repository.save(existing);
+            return true;
+        }).orElse(false);
     }
 
     private IndustryTypeDto toDto(IndustryType entity) {
