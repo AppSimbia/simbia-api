@@ -7,7 +7,6 @@ import lombok.Data;
 @Entity
 @Table(name = "IndustryType")
 public class IndustryType {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,5 +18,5 @@ public class IndustryType {
     private String info;
 
     @Column(name = "cActive", nullable = false, length = 1)
-    private String active = "1";
+    private String active;
 }

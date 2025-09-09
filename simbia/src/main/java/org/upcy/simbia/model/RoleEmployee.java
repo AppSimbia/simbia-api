@@ -12,8 +12,10 @@ public class RoleEmployee {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "idEmployee", nullable = false)
     private Employee employee;
 
     @ManyToOne
+    @JoinColumn(name = "idRole", nullable = false)
     private Role role;
 }

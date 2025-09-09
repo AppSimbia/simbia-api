@@ -7,7 +7,6 @@ public class IndustryDto {
     private long industryType;
     private long plan;
     private long login;
-
     private String cnpj;
     private String industryName;
     private String description;

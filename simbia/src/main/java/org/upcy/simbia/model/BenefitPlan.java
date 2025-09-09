@@ -12,7 +12,7 @@ public class BenefitPlan {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "Benefit")
+    @JoinColumn(name = "idBenefit", nullable = false)
     private Benefit benefit;
 
     @ManyToOne
@@ -21,5 +21,4 @@ public class BenefitPlan {
 
     @Column(name = "cActive", nullable = false, length = 1)
     private String active;
-
 }

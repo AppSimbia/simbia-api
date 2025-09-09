@@ -7,7 +7,6 @@ import lombok.Data;
 @Entity
 @Table(name = "Plan")
 public class Plan {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idPlan")
@@ -20,5 +19,5 @@ public class Plan {
     private double price;
 
     @Column(name = "cActive", nullable = false, length = 1)
-    private String active = "1";
+    private String active;
 }

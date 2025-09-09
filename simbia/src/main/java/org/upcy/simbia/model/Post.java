@@ -14,12 +14,15 @@ public class Post {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "idProductCategory", nullable = false)
     private ProductCategory productCategory;
 
     @ManyToOne
+    @JoinColumn(name = "idIndustry", nullable = false)
     private Industry industry;
 
     @ManyToOne
+    @JoinColumn(name = "idEmployee", nullable = false)
     private Employee employee;
 
     @Column(name = "cTitle")

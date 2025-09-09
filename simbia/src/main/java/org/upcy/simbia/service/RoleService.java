@@ -18,7 +18,6 @@ public class RoleService {
         this.repository = roleRepository;
     }
 
-
     public RoleDto create(RoleDto dto) {
         Role role = new Role();
         role.setRoleName(dto.getRoleName());

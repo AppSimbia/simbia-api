@@ -44,6 +44,21 @@ public class BenefitPlanService {
                 .orElseThrow(() -> new RuntimeException("BenefitPlan não encontrado"));
     }
 
+    public BenefitPlan update(Long id, BenefitPlanDto dto) {
+        BenefitPlan existing = findById(id);
+
+        Benefit benefit = benefitRepository.findById(dto.getBenefit())
+                .orElseThrow(() -> new RuntimeException("Benefit não encontrado"));
+
+        Plan plan = planRepository.findById(dto.getPlan())
+                .orElseThrow(() -> new RuntimeException("Plan não encontrado"));
+
+        existing.setBenefit(benefit);
+        existing.setPlan(plan);
+
+        return benefitPlanRepository.save(existing);
+    }
+
     public void delete(Long id) {
         BenefitPlan bp = findById(id);
         bp.setActive("0");

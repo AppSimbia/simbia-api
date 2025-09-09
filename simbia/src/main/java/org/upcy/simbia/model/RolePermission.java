@@ -12,14 +12,13 @@ public class RolePermission {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "Role")
+    @JoinColumn(name = "idRole", nullable = false)
     private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "Permission")
+    @JoinColumn(name = "idPermission", nullable = false)
     private Permission permission;
 
     @Column(name = "cActive", nullable = false, length = 1)
     private String active;
-
 }
