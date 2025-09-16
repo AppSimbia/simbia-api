@@ -5,51 +5,52 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upcy.simbia.dto.RoleDto;
+import org.upcy.simbia.dto.request.RoleRequestDto;
+import org.upcy.simbia.dto.response.RoleResponseDto;
 
 import jakarta.validation.Valid;
 import java.util.List;
 
-@RequestMapping("/role")
+@RequestMapping("/roles")
 public interface RoleContract {
 
-    @Operation(summary = "Cria um novo cargo")
+    @Operation(summary = "Create a new role")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Cargo criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "201", description = "Role successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PostMapping
-    ResponseEntity<RoleDto> create(@Valid @RequestBody RoleDto dto);
+    ResponseEntity<RoleResponseDto> createRole(@Valid @RequestBody RoleRequestDto dto);
 
-    @Operation(summary = "Lista todos os cargos")
+    @Operation(summary = "List all roles")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista de cargos retornada com sucesso")
+            @ApiResponse(responseCode = "200", description = "List of roles returned successfully")
     })
     @GetMapping
-    ResponseEntity<List<RoleDto>> findAll();
+    ResponseEntity<List<RoleResponseDto>> listRoles();
 
-    @Operation(summary = "Retorna um cargo pelo ID")
+    @Operation(summary = "Get a specific role by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Cargo encontrado"),
-            @ApiResponse(responseCode = "404", description = "Cargo não encontrado")
+            @ApiResponse(responseCode = "200", description = "Role found"),
+            @ApiResponse(responseCode = "404", description = "Role not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<RoleDto> findById(@PathVariable Long id);
+    ResponseEntity<RoleResponseDto> findRoleById(@PathVariable Long id);
 
-    @Operation(summary = "Atualiza um cargo existente pelo ID")
+    @Operation(summary = "Update an existing role by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Cargo atualizado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "404", description = "Cargo não encontrado")
+            @ApiResponse(responseCode = "200", description = "Role updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided"),
+            @ApiResponse(responseCode = "404", description = "Role not found")
     })
     @PutMapping("/{id}")
-    ResponseEntity<RoleDto> update(@PathVariable Long id, @Valid @RequestBody RoleDto dto);
+    ResponseEntity<RoleResponseDto> updateRole(@PathVariable Long id, @Valid @RequestBody RoleRequestDto dto);
 
-    @Operation(summary = "Remove um cargo pelo ID")
+    @Operation(summary = "Delete a role by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Cargo deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Cargo não encontrado")
+            @ApiResponse(responseCode = "204", description = "Role deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Role not found")
     })
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id);
+    ResponseEntity<Void> deleteRole(@PathVariable Long id);
 }

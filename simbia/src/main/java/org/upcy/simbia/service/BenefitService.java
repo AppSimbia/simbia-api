@@ -1,10 +1,15 @@
 package org.upcy.simbia.service;
 
-import org.upcy.simbia.dto.BenefitDto;
-import org.upcy.simbia.model.Benefit;
-import org.upcy.simbia.repository.BenefitRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.upcy.simbia.dto.request.BenefitRequestDto;
+import org.upcy.simbia.dto.response.BenefitResponseDto;
+import org.upcy.simbia.model.Benefit;
+import org.upcy.simbia.repository.BenefitRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,54 +18,55 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BenefitService {
 
-    private final BenefitRepository repository;
+    private final BenefitRepository benefitRepository;
+    private final ObjectMapper objectMapper;
 
-    public BenefitDto create(BenefitDto dto) {
-        if (dto.getBenefitName() == null || dto.getBenefitName().trim().isEmpty()) {
-            throw new RuntimeException("O nome do benefício não pode ser nulo ou vazio");
-        }
-
-        Benefit entity = new Benefit();
-        entity.setBenefitName(dto.getBenefitName());
-        entity.setDescription(dto.getDescription() != null ? dto.getDescription() : "");
-        entity.setActive("1");
-
-        Benefit saved = repository.save(entity);
-        return toDto(saved);
+    private Benefit toEntity(BenefitRequestDto dto) {
+        return objectMapper.convertValue(dto, Benefit.class);
     }
 
-    public BenefitDto findById(Long id) {
-        return repository.findById(id)
-                .map(this::toDto)
-                .orElseThrow(() -> new RuntimeException("Benefit não encontrado"));
+    private BenefitResponseDto toDto(Benefit entity) {
+        return objectMapper.convertValue(entity, BenefitResponseDto.class);
     }
 
-    public List<BenefitDto> findAll() {
-        return repository.findAll()
+    public List<BenefitResponseDto> listBenefits() {
+        return benefitRepository.findAll()
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public BenefitDto update(Long id, BenefitDto dto) {
-        Benefit entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Benefit não encontrado"));
-        entity.setBenefitName(dto.getBenefitName());
-        entity.setDescription(dto.getDescription());
-        return toDto(repository.save(entity));
+    public BenefitResponseDto findBenefit(Long id) {
+        Benefit benefit = benefitRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Benefit not found"));
+        return toDto(benefit);
     }
 
-    public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Benefit não encontrado");
-        }
-        repository.deleteById(id);
+    public BenefitResponseDto insertBenefit(@Valid BenefitRequestDto dto) {
+        Benefit entity = toEntity(dto);
+        entity.setActive("1");
+        benefitRepository.save(entity);
+        return toDto(entity);
     }
 
-    private BenefitDto toDto(Benefit entity) {
-        BenefitDto dto = new BenefitDto();
-        dto.setBenefitName(entity.getBenefitName());
-        dto.setDescription(entity.getDescription());
-        return dto;
+    public void deleteBenefit(Long id) {
+        Benefit benefit = benefitRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Benefit not found"));
+
+        benefit.setActive("0");
+        benefitRepository.save(benefit);
+    }
+
+    @Transactional
+    public BenefitResponseDto updateBenefit(Long id, @Valid BenefitRequestDto dto) {
+        Benefit benefit = benefitRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Benefit not found"));
+
+        Benefit updated = toEntity(dto);
+        updated.setIdBenefit(benefit.getIdBenefit());
+        updated.setActive(benefit.getActive());
+
+        benefitRepository.save(updated);
+        return toDto(updated);
     }
 }

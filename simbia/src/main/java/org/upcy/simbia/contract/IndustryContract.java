@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upcy.simbia.dto.IndustryDto;
-import org.upcy.simbia.model.Industry;
+import org.upcy.simbia.dto.request.IndustryRequestDto;
+import org.upcy.simbia.dto.response.IndustryResponseDto;
 
 import jakarta.validation.Valid;
 import java.util.Optional;
@@ -14,36 +14,37 @@ import java.util.Optional;
 @RequestMapping("/industries")
 public interface IndustryContract {
 
-    @Operation(summary = "Cria uma nova indústria")
+    @Operation(summary = "Create a new industry")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Indústria criada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "201", description = "Industry successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PostMapping
-    ResponseEntity<Industry> create(@Valid @RequestBody IndustryDto dto);
+    ResponseEntity<IndustryResponseDto> createIndustry(@Valid @RequestBody IndustryRequestDto dto);
 
-    @Operation(summary = "Retorna uma indústria pelo ID")
+    @Operation(summary = "Get a specific industry by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Indústria encontrada"),
-            @ApiResponse(responseCode = "404", description = "Indústria não encontrada")
+            @ApiResponse(responseCode = "200", description = "Industry found"),
+            @ApiResponse(responseCode = "404", description = "Industry not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<Optional<Industry>> findById(@PathVariable Long id);
+    ResponseEntity<Optional<IndustryResponseDto>> findIndustryById(@PathVariable Long id);
 
-    @Operation(summary = "Atualiza uma indústria existente")
+    @Operation(summary = "Update an existing industry")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Indústria atualizada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "404", description = "Indústria não encontrada")
+            @ApiResponse(responseCode = "200", description = "Industry successfully updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided"),
+            @ApiResponse(responseCode = "404", description = "Industry not found")
     })
     @PutMapping("/{id}")
-    ResponseEntity<Optional<Industry>> update(@PathVariable Long id, @Valid @RequestBody IndustryDto dto);
+    ResponseEntity<Optional<IndustryResponseDto>> updateIndustry(@PathVariable Long id,
+                                                                 @Valid @RequestBody IndustryRequestDto dto);
 
-    @Operation(summary = "Remove uma indústria pelo ID")
+    @Operation(summary = "Delete an industry by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Indústria deletada com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Indústria não encontrada")
+            @ApiResponse(responseCode = "204", description = "Industry successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "Industry not found")
     })
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id);
+    ResponseEntity<Void> deleteIndustry(@PathVariable Long id);
 }

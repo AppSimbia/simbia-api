@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upcy.simbia.dto.ProductCategoryDto;
-import org.upcy.simbia.model.ProductCategory;
+import org.upcy.simbia.dto.request.ProductCategoryRequestDto;
+import org.upcy.simbia.dto.response.ProductCategoryResponseDto;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -14,43 +14,43 @@ import java.util.List;
 @RequestMapping("/product-categories")
 public interface ProductCategoryContract {
 
-    @Operation(summary = "Cria uma nova categoria de produto")
+    @Operation(summary = "Create a new product category")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Categoria criada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "201", description = "Category successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PostMapping
-    ResponseEntity<ProductCategory> create(@Valid @RequestBody ProductCategoryDto dto);
+    ResponseEntity<ProductCategoryResponseDto> createProductCategory(@Valid @RequestBody ProductCategoryRequestDto dto);
 
-    @Operation(summary = "Lista todas as categorias de produto")
+    @Operation(summary = "List all product categories")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista de categorias retornada com sucesso")
+            @ApiResponse(responseCode = "200", description = "List returned successfully")
     })
     @GetMapping
-    ResponseEntity<List<ProductCategory>> findAll();
+    ResponseEntity<List<ProductCategoryResponseDto>> listProductCategories();
 
-    @Operation(summary = "Retorna uma categoria de produto pelo ID")
+    @Operation(summary = "Get a product category by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Categoria encontrada"),
-            @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+            @ApiResponse(responseCode = "200", description = "Category found"),
+            @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<ProductCategory> findById(@PathVariable Long id);
+    ResponseEntity<ProductCategoryResponseDto> findProductCategoryById(@PathVariable Long id);
 
-    @Operation(summary = "Atualiza uma categoria de produto existente pelo ID")
+    @Operation(summary = "Update a product category by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Categoria atualizada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+            @ApiResponse(responseCode = "200", description = "Category updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided"),
+            @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @PutMapping("/{id}")
-    ResponseEntity<ProductCategory> update(@PathVariable Long id, @Valid @RequestBody ProductCategoryDto dto);
+    ResponseEntity<ProductCategoryResponseDto> updateProductCategory(@PathVariable Long id, @Valid @RequestBody ProductCategoryRequestDto dto);
 
-    @Operation(summary = "Remove uma categoria de produto pelo ID")
+    @Operation(summary = "Delete a product category by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Categoria deletada com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+            @ApiResponse(responseCode = "204", description = "Category deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id);
+    ResponseEntity<Void> deleteProductCategory(@PathVariable Long id);
 }

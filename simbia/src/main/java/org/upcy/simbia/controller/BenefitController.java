@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.contract.BenefitContract;
-import org.upcy.simbia.dto.BenefitDto;
+import org.upcy.simbia.dto.request.BenefitRequestDto;
+import org.upcy.simbia.dto.response.BenefitResponseDto;
 import org.upcy.simbia.service.BenefitService;
 
 import java.util.List;
@@ -16,28 +17,28 @@ public class BenefitController implements BenefitContract {
     private final BenefitService service;
 
     @Override
-    public ResponseEntity<BenefitDto> create(BenefitDto dto) {
-        return ResponseEntity.ok(service.create(dto));
+    public ResponseEntity<BenefitResponseDto> create(BenefitRequestDto dto) {
+        return ResponseEntity.ok(service.insertBenefit(dto));
     }
 
     @Override
-    public ResponseEntity<BenefitDto> findById(Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<BenefitResponseDto> findById(Long id) {
+        return ResponseEntity.ok(service.findBenefit(id));
     }
 
     @Override
-    public ResponseEntity<List<BenefitDto>> findAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<BenefitResponseDto>> findAll() {
+        return ResponseEntity.ok(service.listBenefits());
     }
 
     @Override
-    public ResponseEntity<BenefitDto> update(Long id, BenefitDto dto) {
-        return ResponseEntity.ok(service.update(id, dto));
+    public ResponseEntity<BenefitResponseDto> update(Long id, BenefitRequestDto dto) {
+        return ResponseEntity.ok(service.updateBenefit(id, dto));
     }
 
     @Override
     public ResponseEntity<Void> delete(Long id) {
-        service.delete(id);
+        service.deleteBenefit(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,64 +1,63 @@
 package org.upcy.simbia.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.upcy.simbia.dto.RoleDto;
+import org.upcy.simbia.dto.request.RoleRequestDto;
+import org.upcy.simbia.dto.response.RoleResponseDto;
 import org.upcy.simbia.model.Role;
 import org.upcy.simbia.repository.RoleRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class RoleService {
-    
-    private final RoleRepository repository;
-    
-    public RoleService(RoleRepository roleRepository) {
-        this.repository = roleRepository;
+
+    private final RoleRepository roleRepository;
+
+    private RoleResponseDto toDto(Role role) {
+        RoleResponseDto dto = new RoleResponseDto();
+        dto.setRoleName(role.getRoleName());
+        return dto;
     }
 
-    public RoleDto create(RoleDto dto) {
-        Role role = new Role();
-        role.setRoleName(dto.getRoleName());
-        role.setActive("1");
-        Role saved = repository.save(role);
-        return toDto(saved);
-    }
-
-    public List<RoleDto> findAll() {
-        return repository.findAll()
+    public List<RoleResponseDto> listRoles() {
+        return roleRepository.findAll()
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public RoleDto findById(Long id) {
-        Optional<Role> role = repository.findById(id);
-        return role.map(this::toDto).orElse(null);
+    public RoleResponseDto findRoleById(Long id) {
+        Role role = roleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
+        return toDto(role);
     }
 
-    public RoleDto update(Long id, RoleDto dto) {
-        Optional<Role> opt = repository.findById(id);
-        if (opt.isPresent()) {
-            Role role = opt.get();
-            role.setRoleName(dto.getRoleName());
-            Role updated = repository.save(role);
-            return toDto(updated);
-        }
-        return null;
+    public RoleResponseDto createRole(RoleRequestDto dto) {
+        Role role = new Role();
+        role.setRoleName(dto.getRoleName());
+        role.setActive("1");
+        Role saved = roleRepository.save(role);
+        return toDto(saved);
     }
 
-    public boolean delete(Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+    @Transactional
+    public RoleResponseDto updateRole(Long id, RoleRequestDto dto) {
+        Role existing = roleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
+        existing.setRoleName(dto.getRoleName());
+        roleRepository.save(existing);
+        return toDto(existing);
     }
 
-    private RoleDto toDto(Role role) {
-        RoleDto dto = new RoleDto();
-        dto.setRoleName(role.getRoleName());
-        return dto;
-    }}
+    public void deleteRole(Long id) {
+        Role existing = roleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
+        existing.setActive("0");
+        roleRepository.save(existing);
+    }
+}

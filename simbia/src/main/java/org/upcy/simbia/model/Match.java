@@ -9,15 +9,15 @@ import lombok.Data;
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idMatch;
 
     @ManyToOne
     @JoinColumn(name = "idEmployee", nullable = false)
-    private Employee employee;
+    private Employee idEmployee;
 
     @ManyToOne
     @JoinColumn(name = "idPost", nullable = false)
-    private Post post;
+    private Post idPost;
 
     @ManyToOne
     @JoinColumn(name = "idIndustryOrigin", nullable = false)

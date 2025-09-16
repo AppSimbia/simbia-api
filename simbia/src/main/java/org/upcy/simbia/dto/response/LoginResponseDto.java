@@ -1,10 +1,9 @@
-package org.upcy.simbia.dto;
+package org.upcy.simbia.dto.response;
 
 import lombok.Data;
 
 @Data
-public class LoginDto {
+public class LoginResponseDto {
     private String userName;
     private String pwdUUID ;
-    private String isFirstLogin;
 }

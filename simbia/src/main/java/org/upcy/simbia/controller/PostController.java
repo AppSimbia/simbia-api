@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.contract.PostContract;
-import org.upcy.simbia.dto.PostDto;
-import org.upcy.simbia.model.Post;
+import org.upcy.simbia.dto.request.PostRequestDto;
+import org.upcy.simbia.dto.response.PostResponseDto;
 import org.upcy.simbia.service.PostService;
 
 import java.util.List;
@@ -17,28 +17,28 @@ public class PostController implements PostContract {
     private final PostService postService;
 
     @Override
-    public ResponseEntity<Post> create(PostDto dto) {
-        return ResponseEntity.ok(postService.create(dto));
+    public ResponseEntity<PostResponseDto> create(PostRequestDto dto) {
+        return ResponseEntity.ok(postService.insertPost(dto));
     }
 
     @Override
-    public ResponseEntity<List<Post>> findAll() {
-        return ResponseEntity.ok(postService.findAll());
+    public ResponseEntity<List<PostResponseDto>> findAll() {
+        return ResponseEntity.ok(postService.listPosts());
     }
 
     @Override
-    public ResponseEntity<Post> findById(Long id) {
-        return ResponseEntity.ok(postService.findById(id));
+    public ResponseEntity<PostResponseDto> findById(Long id) {
+        return ResponseEntity.ok(postService.findPost(id));
     }
 
     @Override
-    public ResponseEntity<Post> update(Long id, PostDto dto) {
-        return ResponseEntity.ok(postService.update(id, dto));
+    public ResponseEntity<PostResponseDto> update(Long id, PostRequestDto dto) {
+        return ResponseEntity.ok(postService.updatePost(id, dto));
     }
 
     @Override
     public ResponseEntity<Void> delete(Long id) {
-        postService.delete(id);
+        postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
 }

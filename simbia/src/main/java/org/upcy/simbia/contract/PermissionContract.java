@@ -5,7 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upcy.simbia.dto.PermissionDto;
+import org.upcy.simbia.dto.request.PermissionRequestDto;
+import org.upcy.simbia.dto.response.PermissionResponseDto;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -13,43 +14,43 @@ import java.util.List;
 @RequestMapping("/permissions")
 public interface PermissionContract {
 
-    @Operation(summary = "Cria uma nova permissão")
+    @Operation(summary = "Create a new permission")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Permissão criada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "201", description = "Permission successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PostMapping
-    ResponseEntity<PermissionDto> create(@Valid @RequestBody PermissionDto dto);
+    ResponseEntity<PermissionResponseDto> createPermission(@Valid @RequestBody PermissionRequestDto dto);
 
-    @Operation(summary = "Lista todas as permissões")
+    @Operation(summary = "List all permissions")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista de permissões retornada com sucesso")
+            @ApiResponse(responseCode = "200", description = "List of permissions returned successfully")
     })
     @GetMapping
-    ResponseEntity<List<PermissionDto>> findAll();
+    ResponseEntity<List<PermissionResponseDto>> listPermissions();
 
-    @Operation(summary = "Retorna uma permissão pelo ID")
+    @Operation(summary = "Get a specific permission by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Permissão encontrada"),
-            @ApiResponse(responseCode = "404", description = "Permissão não encontrada")
+            @ApiResponse(responseCode = "200", description = "Permission found"),
+            @ApiResponse(responseCode = "404", description = "Permission not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<PermissionDto> findById(@PathVariable Long id);
+    ResponseEntity<PermissionResponseDto> findPermissionById(@PathVariable Long id);
 
-    @Operation(summary = "Atualiza uma permissão existente")
+    @Operation(summary = "Update an existing permission by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Permissão atualizada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "404", description = "Permissão não encontrada")
+            @ApiResponse(responseCode = "200", description = "Permission updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided"),
+            @ApiResponse(responseCode = "404", description = "Permission not found")
     })
     @PutMapping("/{id}")
-    ResponseEntity<PermissionDto> update(@PathVariable Long id, @Valid @RequestBody PermissionDto dto);
+    ResponseEntity<PermissionResponseDto> updatePermission(@PathVariable Long id, @Valid @RequestBody PermissionRequestDto dto);
 
-    @Operation(summary = "Remove uma permissão pelo ID")
+    @Operation(summary = "Delete a permission by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Permissão deletada com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Permissão não encontrada")
+            @ApiResponse(responseCode = "204", description = "Permission deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Permission not found")
     })
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id);
+    ResponseEntity<Void> deletePermission(@PathVariable Long id);
 }

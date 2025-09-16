@@ -11,7 +11,7 @@ import java.util.Date;
 public class Login {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idLogin;
 
     @Column(name = "cUserName")
     private String userName;

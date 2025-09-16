@@ -1,56 +1,44 @@
 package org.upcy.simbia.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.contract.PermissionContract;
-import org.upcy.simbia.dto.PermissionDto;
+import org.upcy.simbia.dto.request.PermissionRequestDto;
+import org.upcy.simbia.dto.response.PermissionResponseDto;
 import org.upcy.simbia.service.PermissionService;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class PermissionController implements PermissionContract {
 
-    private final PermissionService service;
+    private final PermissionService permissionService;
 
-    public PermissionController(PermissionService service) {
-        this.service = service;
+    @Override
+    public ResponseEntity<PermissionResponseDto> createPermission(PermissionRequestDto dto) {
+        return ResponseEntity.status(201).body(permissionService.createPermission(dto));
     }
 
     @Override
-    public ResponseEntity<PermissionDto> create(PermissionDto dto) {
-        return ResponseEntity.ok(service.create(dto));
+    public ResponseEntity<List<PermissionResponseDto>> listPermissions() {
+        return ResponseEntity.ok(permissionService.listPermissions());
     }
 
     @Override
-    public ResponseEntity<List<PermissionDto>> findAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<PermissionResponseDto> findPermissionById(Long id) {
+        return ResponseEntity.ok(permissionService.findPermissionById(id));
     }
 
     @Override
-    public ResponseEntity<PermissionDto> findById(Long id) {
-        PermissionDto dto = service.findById(id);
-        if (dto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<PermissionResponseDto> updatePermission(Long id, PermissionRequestDto dto) {
+        return ResponseEntity.ok(permissionService.updatePermission(id, dto));
     }
 
     @Override
-    public ResponseEntity<PermissionDto> update(Long id, PermissionDto dto) {
-        PermissionDto updated = service.update(id, dto);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updated);
-    }
-
-    @Override
-    public ResponseEntity<Void> delete(Long id) {
-        boolean deleted = service.delete(id);
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deletePermission(Long id) {
+        permissionService.deletePermission(id);
         return ResponseEntity.noContent().build();
     }
 }

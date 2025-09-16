@@ -5,45 +5,52 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upcy.simbia.dto.EmployeeDto;
-import org.upcy.simbia.model.Employee;
+import org.upcy.simbia.dto.request.EmployeeRequestDto;
+import org.upcy.simbia.dto.response.EmployeeResponseDto;
 
 import jakarta.validation.Valid;
-import java.util.Optional;
+import java.util.List;
 
 @RequestMapping("/employees")
 public interface EmployeeContract {
 
-    @Operation(summary = "Cria um novo colaborador")
+    @Operation(summary = "Create a new employee")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Colaborador criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "201", description = "Employee created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PostMapping
-    ResponseEntity<Employee> create(@Valid @RequestBody EmployeeDto dto);
+    ResponseEntity<EmployeeResponseDto> createEmployee(@Valid @RequestBody EmployeeRequestDto dto);
 
-    @Operation(summary = "Retorna um colaborador pelo ID")
+    @Operation(summary = "List all employees")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Colaborador encontrado"),
-            @ApiResponse(responseCode = "404", description = "Colaborador não encontrado")
+            @ApiResponse(responseCode = "200", description = "List returned successfully")
+    })
+    @GetMapping
+    ResponseEntity<List<EmployeeResponseDto>> listEmployees();
+
+    @Operation(summary = "Get an employee by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Employee found"),
+            @ApiResponse(responseCode = "404", description = "Employee not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<Optional<Employee>> findById(@PathVariable Long id);
+    ResponseEntity<EmployeeResponseDto> findEmployeeById(@PathVariable Long id);
 
-    @Operation(summary = "Atualiza um colaborador existente")
+    @Operation(summary = "Update an existing employee by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Colaborador atualizado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "404", description = "Colaborador não encontrado")
+            @ApiResponse(responseCode = "200", description = "Employee updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided"),
+            @ApiResponse(responseCode = "404", description = "Employee not found")
     })
     @PutMapping("/{id}")
-    ResponseEntity<Optional<Employee>> update(@PathVariable Long id, @Valid @RequestBody EmployeeDto dto);
+    ResponseEntity<EmployeeResponseDto> updateEmployee(@PathVariable Long id, @Valid @RequestBody EmployeeRequestDto dto);
 
-    @Operation(summary = "Remove um colaborador pelo ID")
+    @Operation(summary = "Delete an employee by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Colaborador deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Colaborador não encontrado")
+            @ApiResponse(responseCode = "204", description = "Employee deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Employee not found")
     })
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id);
+    ResponseEntity<Void> deleteEmployee(@PathVariable Long id);
 }

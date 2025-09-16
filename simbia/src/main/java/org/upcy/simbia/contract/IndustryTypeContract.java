@@ -5,51 +5,52 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upcy.simbia.dto.IndustryTypeDto;
+import org.upcy.simbia.dto.request.IndustryTypeRequestDto;
+import org.upcy.simbia.dto.response.IndustryTypeResponseDto;
 
 import jakarta.validation.Valid;
 import java.util.List;
 
-@RequestMapping("/industry-type")
+@RequestMapping("/industry-types")
 public interface IndustryTypeContract {
 
-    @Operation(summary = "Cria um novo tipo de empresa")
+    @Operation(summary = "Create a new industry type")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Tipo de empresa criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "201", description = "Industry type successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PostMapping
-    ResponseEntity<IndustryTypeDto> create(@Valid @RequestBody IndustryTypeDto dto);
+    ResponseEntity<IndustryTypeResponseDto> createIndustryType(@Valid @RequestBody IndustryTypeRequestDto dto);
 
-    @Operation(summary = "Retorna um tipo de empresa específico pelo ID")
+    @Operation(summary = "Get a specific industry type by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Tipo de empresa encontrado"),
-            @ApiResponse(responseCode = "404", description = "Tipo de empresa não encontrado")
+            @ApiResponse(responseCode = "200", description = "Industry type found"),
+            @ApiResponse(responseCode = "404", description = "Industry type not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<IndustryTypeDto> findById(@PathVariable Long id);
+    ResponseEntity<IndustryTypeResponseDto> findById(@PathVariable Long id);
 
-    @Operation(summary = "Lista todos os tipos de empresa")
+    @Operation(summary = "List all industry types")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista de tipos de empresa retornada com sucesso")
+            @ApiResponse(responseCode = "200", description = "List of industry types successfully returned")
     })
     @GetMapping
-    ResponseEntity<List<IndustryTypeDto>> findAll();
+    ResponseEntity<List<IndustryTypeResponseDto>> findAll();
 
-    @Operation(summary = "Atualiza um tipo de empresa existente")
+    @Operation(summary = "Update an existing industry type")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Tipo de empresa atualizado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "404", description = "Tipo de empresa não encontrado")
+            @ApiResponse(responseCode = "200", description = "Industry type successfully updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided"),
+            @ApiResponse(responseCode = "404", description = "Industry type not found")
     })
     @PutMapping("/{id}")
-    ResponseEntity<IndustryTypeDto> update(@PathVariable Long id, @Valid @RequestBody IndustryTypeDto dto);
+    ResponseEntity<IndustryTypeResponseDto> updateIndustryType(@PathVariable Long id, @Valid @RequestBody IndustryTypeRequestDto dto);
 
-    @Operation(summary = "Remove um tipo de empresa pelo ID")
+    @Operation(summary = "Delete an industry type by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Tipo de empresa deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Tipo de empresa não encontrado")
+            @ApiResponse(responseCode = "204", description = "Industry type successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "Industry type not found")
     })
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id);
+    ResponseEntity<Void> deleteIndustryType(@PathVariable Long id);
 }

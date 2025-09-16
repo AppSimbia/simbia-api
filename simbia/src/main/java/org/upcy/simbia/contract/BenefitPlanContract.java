@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upcy.simbia.dto.BenefitPlanDto;
-import org.upcy.simbia.model.BenefitPlan;
+import org.upcy.simbia.dto.request.BenefitPlanRequestDto;
+import org.upcy.simbia.dto.response.BenefitPlanResponseDto;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -14,33 +14,43 @@ import java.util.List;
 @RequestMapping("/benefit-plans")
 public interface BenefitPlanContract {
 
-    @Operation(summary = "Cria um novo plano de benefício")
+    @Operation(summary = "Create a new benefit plan")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Plano de benefício criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "201", description = "Benefit plan successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PostMapping
-    ResponseEntity<BenefitPlan> create(@Valid @RequestBody BenefitPlanDto dto);
+    ResponseEntity<BenefitPlanResponseDto> create(@Valid @RequestBody BenefitPlanRequestDto dto);
 
-    @Operation(summary = "Lista todos os planos de benefício")
+    @Operation(summary = "List all benefit plans")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista de planos de benefício retornada com sucesso")
+            @ApiResponse(responseCode = "200", description = "List of benefit plans successfully returned")
     })
     @GetMapping
-    ResponseEntity<List<BenefitPlan>> findAll();
+    ResponseEntity<List<BenefitPlanResponseDto>> findAll();
 
-    @Operation(summary = "Retorna um plano de benefício específico pelo ID")
+    @Operation(summary = "Get a specific benefit plan by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Plano de benefício encontrado"),
-            @ApiResponse(responseCode = "404", description = "Plano de benefício não encontrado")
+            @ApiResponse(responseCode = "200", description = "Benefit plan found"),
+            @ApiResponse(responseCode = "404", description = "Benefit plan not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<BenefitPlan> findById(@PathVariable Long id);
+    ResponseEntity<BenefitPlanResponseDto> findById(@PathVariable Long id);
 
-    @Operation(summary = "Remove um plano de benefício pelo ID")
+    @Operation(summary = "Update a benefit plan by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Plano de benefício deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Plano de benefício não encontrado")
+            @ApiResponse(responseCode = "200", description = "Benefit plan successfully updated"),
+            @ApiResponse(responseCode = "404", description = "Benefit plan not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided")
+    })
+    @PutMapping("/{id}")
+    ResponseEntity<BenefitPlanResponseDto> update(@PathVariable Long id,
+                                                  @Valid @RequestBody BenefitPlanRequestDto dto);
+
+    @Operation(summary = "Delete a benefit plan by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Benefit plan successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "Benefit plan not found")
     })
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable Long id);

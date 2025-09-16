@@ -9,7 +9,7 @@ import lombok.Data;
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idPermission;
 
     @Column(name = "cPermissionName")
     private String permissionName;

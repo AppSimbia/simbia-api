@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upcy.simbia.dto.MatchDto;
-import org.upcy.simbia.model.Match;
+import org.upcy.simbia.dto.request.MatchRequestDto;
+import org.upcy.simbia.dto.response.MatchResponseDto;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -14,51 +14,51 @@ import java.util.List;
 @RequestMapping("/matches")
 public interface MatchContract {
 
-    @Operation(summary = "Cria uma nova correspondência")
+    @Operation(summary = "Create a new match")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Match criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "201", description = "Match successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PostMapping
-    ResponseEntity<Match> create(@Valid @RequestBody MatchDto dto);
+    ResponseEntity<MatchResponseDto> create(@Valid @RequestBody MatchRequestDto dto);
 
-    @Operation(summary = "Lista todas as correspondências")
+    @Operation(summary = "List all matches")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista de matches retornada com sucesso")
+            @ApiResponse(responseCode = "200", description = "List of matches successfully returned")
     })
     @GetMapping
-    ResponseEntity<List<Match>> findAll();
+    ResponseEntity<List<MatchResponseDto>> findAll();
 
-    @Operation(summary = "Retorna uma correspondência pelo ID")
+    @Operation(summary = "Find a match by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Match encontrado"),
-            @ApiResponse(responseCode = "404", description = "Match não encontrado")
+            @ApiResponse(responseCode = "200", description = "Match found"),
+            @ApiResponse(responseCode = "404", description = "Match not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<Match> findById(@PathVariable Long id);
+    ResponseEntity<MatchResponseDto> findById(@PathVariable Long id);
 
-    @Operation(summary = "Atualiza uma correspondência existente")
+    @Operation(summary = "Update an existing match")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Match atualizado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "404", description = "Match não encontrado")
+            @ApiResponse(responseCode = "200", description = "Match successfully updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided"),
+            @ApiResponse(responseCode = "404", description = "Match not found")
     })
     @PutMapping("/{id}")
-    ResponseEntity<Match> update(@PathVariable Long id, @Valid @RequestBody MatchDto dto);
+    ResponseEntity<MatchResponseDto> update(@PathVariable Long id, @Valid @RequestBody MatchRequestDto dto);
 
-    @Operation(summary = "Remove uma correspondência pelo ID")
+    @Operation(summary = "Delete a match by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Match deletado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Match não encontrado")
+            @ApiResponse(responseCode = "204", description = "Match successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "Match not found")
     })
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable Long id);
 
-    @Operation(summary = "Atualiza o status de uma correspondência")
+    @Operation(summary = "Update the status of a match")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Status do match atualizado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Match não encontrado")
+            @ApiResponse(responseCode = "200", description = "Match status successfully updated"),
+            @ApiResponse(responseCode = "404", description = "Match not found")
     })
     @PatchMapping("/{id}/status")
-    ResponseEntity<Match> updateStatus(@PathVariable Long id, @RequestParam String status);
+    ResponseEntity<MatchResponseDto> updateStatus(@PathVariable Long id, @RequestParam String status);
 }

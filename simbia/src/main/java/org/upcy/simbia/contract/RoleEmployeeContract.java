@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upcy.simbia.dto.RoleEmployeeDto;
-import org.upcy.simbia.model.RoleEmployee;
+import org.upcy.simbia.dto.request.RoleEmployeeRequestDto;
+import org.upcy.simbia.dto.response.RoleEmployeeResponseDto;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -14,43 +14,43 @@ import java.util.List;
 @RequestMapping("/role-employees")
 public interface RoleEmployeeContract {
 
-    @Operation(summary = "Cria uma nova associação entre cargo e colaborador")
+    @Operation(summary = "Create a new role-employee association")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Associação criada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "201", description = "Association successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PostMapping
-    ResponseEntity<RoleEmployee> create(@Valid @RequestBody RoleEmployeeDto dto);
+    ResponseEntity<RoleEmployeeResponseDto> createRoleEmployee(@Valid @RequestBody RoleEmployeeRequestDto dto);
 
-    @Operation(summary = "Lista todas as associações entre cargos e colaboradores")
+    @Operation(summary = "List all role-employee associations")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
+            @ApiResponse(responseCode = "200", description = "List returned successfully")
     })
     @GetMapping
-    ResponseEntity<List<RoleEmployee>> findAll();
+    ResponseEntity<List<RoleEmployeeResponseDto>> listRoleEmployees();
 
-    @Operation(summary = "Retorna uma associação pelo ID")
+    @Operation(summary = "Get a role-employee association by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Associação encontrada"),
-            @ApiResponse(responseCode = "404", description = "Associação não encontrada")
+            @ApiResponse(responseCode = "200", description = "Association found"),
+            @ApiResponse(responseCode = "404", description = "Association not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<RoleEmployee> findById(@PathVariable Long id);
+    ResponseEntity<RoleEmployeeResponseDto> findRoleEmployeeById(@PathVariable Long id);
 
-    @Operation(summary = "Atualiza uma associação existente pelo ID")
+    @Operation(summary = "Update a role-employee association by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Associação atualizada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
-            @ApiResponse(responseCode = "404", description = "Associação não encontrada")
+            @ApiResponse(responseCode = "200", description = "Association updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided"),
+            @ApiResponse(responseCode = "404", description = "Association not found")
     })
     @PutMapping("/{id}")
-    ResponseEntity<RoleEmployee> update(@PathVariable Long id, @Valid @RequestBody RoleEmployeeDto dto);
+    ResponseEntity<RoleEmployeeResponseDto> updateRoleEmployee(@PathVariable Long id, @Valid @RequestBody RoleEmployeeRequestDto dto);
 
-    @Operation(summary = "Remove uma associação pelo ID")
+    @Operation(summary = "Delete a role-employee association by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Associação deletada com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Associação não encontrada")
+            @ApiResponse(responseCode = "204", description = "Association deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Association not found")
     })
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id);
+    ResponseEntity<Void> deleteRoleEmployee(@PathVariable Long id);
 }

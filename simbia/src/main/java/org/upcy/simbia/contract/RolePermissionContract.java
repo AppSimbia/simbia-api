@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upcy.simbia.dto.RolePermissionDto;
-import org.upcy.simbia.model.RolePermission;
+import org.upcy.simbia.dto.request.RolePermissionRequestDto;
+import org.upcy.simbia.dto.response.RolePermissionResponseDto;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -14,34 +14,34 @@ import java.util.List;
 @RequestMapping("/role-permissions")
 public interface RolePermissionContract {
 
-    @Operation(summary = "Cria uma nova associação entre cargo e permissão")
+    @Operation(summary = "Create a new role-permission association")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Associação criada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "201", description = "Association successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PostMapping
-    ResponseEntity<RolePermission> create(@Valid @RequestBody RolePermissionDto dto);
+    ResponseEntity<RolePermissionResponseDto> createRolePermission(@Valid @RequestBody RolePermissionRequestDto dto);
 
-    @Operation(summary = "Lista todas as associações entre cargos e permissões")
+    @Operation(summary = "List all role-permission associations")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
+            @ApiResponse(responseCode = "200", description = "List returned successfully")
     })
     @GetMapping
-    ResponseEntity<List<RolePermission>> findAll();
+    ResponseEntity<List<RolePermissionResponseDto>> listRolePermissions();
 
-    @Operation(summary = "Retorna uma associação pelo ID")
+    @Operation(summary = "Get a role-permission association by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Associação encontrada"),
-            @ApiResponse(responseCode = "404", description = "Associação não encontrada")
+            @ApiResponse(responseCode = "200", description = "Association found"),
+            @ApiResponse(responseCode = "404", description = "Association not found")
     })
     @GetMapping("/{id}")
-    ResponseEntity<RolePermission> findById(@PathVariable Long id);
+    ResponseEntity<RolePermissionResponseDto> findRolePermissionById(@PathVariable Long id);
 
-    @Operation(summary = "Remove uma associação pelo ID")
+    @Operation(summary = "Delete a role-permission association by ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Associação deletada com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Associação não encontrada")
+            @ApiResponse(responseCode = "204", description = "Association deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Association not found")
     })
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id);
+    ResponseEntity<Void> deleteRolePermission(@PathVariable Long id);
 }

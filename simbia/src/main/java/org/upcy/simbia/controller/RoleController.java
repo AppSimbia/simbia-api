@@ -1,56 +1,44 @@
 package org.upcy.simbia.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.contract.RoleContract;
-import org.upcy.simbia.dto.RoleDto;
+import org.upcy.simbia.dto.request.RoleRequestDto;
+import org.upcy.simbia.dto.response.RoleResponseDto;
 import org.upcy.simbia.service.RoleService;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class RoleController implements RoleContract {
 
-    private final RoleService service;
+    private final RoleService roleService;
 
-    public RoleController(RoleService service) {
-        this.service = service;
+    @Override
+    public ResponseEntity<RoleResponseDto> createRole(RoleRequestDto dto) {
+        return ResponseEntity.status(201).body(roleService.createRole(dto));
     }
 
     @Override
-    public ResponseEntity<RoleDto> create(RoleDto dto) {
-        return ResponseEntity.ok(service.create(dto));
+    public ResponseEntity<List<RoleResponseDto>> listRoles() {
+        return ResponseEntity.ok(roleService.listRoles());
     }
 
     @Override
-    public ResponseEntity<List<RoleDto>> findAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<RoleResponseDto> findRoleById(Long id) {
+        return ResponseEntity.ok(roleService.findRoleById(id));
     }
 
     @Override
-    public ResponseEntity<RoleDto> findById(Long id) {
-        RoleDto dto = service.findById(id);
-        if (dto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<RoleResponseDto> updateRole(Long id, RoleRequestDto dto) {
+        return ResponseEntity.ok(roleService.updateRole(id, dto));
     }
 
     @Override
-    public ResponseEntity<RoleDto> update(Long id, RoleDto dto) {
-        RoleDto updated = service.update(id, dto);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updated);
-    }
-
-    @Override
-    public ResponseEntity<Void> delete(Long id) {
-        boolean deleted = service.delete(id);
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deleteRole(Long id) {
+        roleService.deleteRole(id);
         return ResponseEntity.noContent().build();
     }
 }

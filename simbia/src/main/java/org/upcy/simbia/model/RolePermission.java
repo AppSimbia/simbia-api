@@ -9,15 +9,15 @@ import lombok.Data;
 public class RolePermission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idRolePermission;
 
     @ManyToOne
     @JoinColumn(name = "idRole", nullable = false)
-    private Role role;
+    private Role idRole;
 
     @ManyToOne
     @JoinColumn(name = "idPermission", nullable = false)
-    private Permission permission;
+    private Permission idPermission;
 
     @Column(name = "cActive", nullable = false, length = 1)
     private String active;

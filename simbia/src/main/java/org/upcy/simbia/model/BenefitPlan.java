@@ -9,15 +9,15 @@ import lombok.Data;
 public class BenefitPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idBenefitPlan;
 
     @ManyToOne
     @JoinColumn(name = "idBenefit", nullable = false)
-    private Benefit benefit;
+    private Benefit idBenefit;
 
     @ManyToOne
-    @JoinColumn(name = "Plan")
-    private Plan plan;
+    @JoinColumn(name = "idPlan")
+    private Plan idPlan;
 
     @Column(name = "cActive", nullable = false, length = 1)
     private String active;
