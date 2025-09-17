@@ -61,10 +61,18 @@ public class IndustryTypeService {
         return toDto(repository.save(entity));
     }
 
-    public void deleteIndustryType(Long id) {
-        IndustryType entity = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Industry type not found"));
-        entity.setActive("0");
-        repository.save(entity);
+    public boolean delete(Long id) {
+        return repository.findById(id).map(existing -> {
+            existing.setActive("0");
+            repository.save(existing);
+            return true;
+        }).orElse(false);
+    }
+
+    private IndustryTypeDto toDto(IndustryType entity) {
+        IndustryTypeDto dto = new IndustryTypeDto();
+        dto.setIndustryTypeName(entity.getIndustryTypeName());
+        dto.setInfo(entity.getInfo());
+        return dto;
     }
 }
