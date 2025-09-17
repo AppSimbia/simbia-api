@@ -1,13 +1,12 @@
-package org.upcy.simbia.dto;
+package org.upcy.simbia.dto.response;
 
 import lombok.Data;
 
 @Data
-public class IndustryDto {
-    private long industryType;
-    private long plan;
-    private long login;
-
+public class IndustryResponseDto {
+    private long idIndustryType;
+    private long idPlan;
+    private long idLogin;
     private String cnpj;
     private String industryName;
     private String description;
@@ -16,5 +15,4 @@ public class IndustryDto {
     private String city;
     private String state;
     private String image;
-
 }

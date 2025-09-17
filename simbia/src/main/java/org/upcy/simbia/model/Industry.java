@@ -11,16 +11,16 @@ import org.hibernate.validator.constraints.br.CNPJ;
 public class Industry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idIndustry;
 
     @ManyToOne
     private IndustryType industryType;
 
     @ManyToOne
-    private Plan plan;
+    private Plan idPlan;
 
     @ManyToOne
-    private Login login;
+    private Login idLogin;
 
     @CNPJ
     @Column(name = "cCNPJ")

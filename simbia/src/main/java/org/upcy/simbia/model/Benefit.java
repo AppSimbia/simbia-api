@@ -7,7 +7,6 @@ import lombok.Data;
 @Entity
 @Table(name = "Benefit")
 public class Benefit {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idBenefit")

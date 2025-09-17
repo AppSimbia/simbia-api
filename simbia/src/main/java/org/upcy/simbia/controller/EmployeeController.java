@@ -1,41 +1,44 @@
 package org.upcy.simbia.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.contract.EmployeeContract;
-import org.upcy.simbia.dto.EmployeeDto;
-import org.upcy.simbia.model.Employee;
+import org.upcy.simbia.dto.request.EmployeeRequestDto;
+import org.upcy.simbia.dto.response.EmployeeResponseDto;
 import org.upcy.simbia.service.EmployeeService;
 
-import java.util.Optional;
+import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class EmployeeController implements EmployeeContract {
 
     private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
+    @Override
+    public ResponseEntity<EmployeeResponseDto> createEmployee(EmployeeRequestDto dto) {
+        return ResponseEntity.status(201).body(employeeService.createEmployee(dto));
     }
 
     @Override
-    public ResponseEntity<Employee> create(EmployeeDto dto) {
-        return ResponseEntity.ok(employeeService.create(dto));
+    public ResponseEntity<EmployeeResponseDto> findEmployeeById(Long id) {
+        return ResponseEntity.ok(employeeService.findEmployeeById(id));
     }
 
     @Override
-    public ResponseEntity<Optional<Employee>> findById(Long id) {
-        return ResponseEntity.ok(employeeService.findById(id));
+    public ResponseEntity<EmployeeResponseDto> updateEmployee(Long id, EmployeeRequestDto dto) {
+        return ResponseEntity.ok(employeeService.updateEmployee(id, dto));
     }
 
     @Override
-    public ResponseEntity<Optional<Employee>> update(Long id, EmployeeDto dto) {
-        return ResponseEntity.ok(employeeService.update(id, dto));
+    public ResponseEntity<Void> deleteEmployee(Long id) {
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<Void> delete(Long id) {
-        boolean deleted = employeeService.delete(id);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    public ResponseEntity<List<EmployeeResponseDto>> listEmployees() {
+        return ResponseEntity.ok(employeeService.listEmployees());
     }
 }

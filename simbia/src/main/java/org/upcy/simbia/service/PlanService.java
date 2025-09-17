@@ -1,61 +1,72 @@
 package org.upcy.simbia.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.upcy.simbia.dto.PlanDto;
+import org.upcy.simbia.dto.request.PlanRequestDto;
+import org.upcy.simbia.dto.response.PlanResponseDto;
 import org.upcy.simbia.model.Plan;
 import org.upcy.simbia.repository.PlanRepository;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PlanService {
 
     private final PlanRepository planRepository;
+    private final ObjectMapper objectMapper;
 
-    public PlanService(PlanRepository planRepository) {
-        this.planRepository = planRepository;
+    private Plan toEntity(PlanRequestDto dto) {
+        return objectMapper.convertValue(dto, Plan.class);
     }
 
-    public Plan create(PlanDto dto) {
-        if (dto.getPlanName() == null || dto.getPlanName().isBlank()) {
-            throw new RuntimeException("Plan name is required");
-        }
-
-        Plan plan = new Plan();
-        plan.setPlanName(dto.getPlanName());
-        plan.setPrice(dto.getPrice());
-        plan.setActive("1");
-        return planRepository.save(plan);
+    private PlanResponseDto toDto(Plan entity) {
+        return objectMapper.convertValue(entity, PlanResponseDto.class);
     }
 
-    public List<Plan> findAll() {
-        return planRepository.findAll();
+    public List<PlanResponseDto> listPlans() {
+        return planRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Plan> findById(Long id) {
-        return planRepository.findById(id);
+    public PlanResponseDto getPlan(Long id) {
+        Plan plan = planRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Plan not found"));
+        return toDto(plan);
     }
 
-    public Plan update(Long id, PlanDto dto) {
-        return planRepository.findById(id)
-                .map(existing -> {
-                    if (dto.getPlanName() == null || dto.getPlanName().isBlank()) {
-                        throw new RuntimeException("Plan name is required");
-                    }
-                    existing.setPlanName(dto.getPlanName());
-                    existing.setPrice(dto.getPrice());
-                    return planRepository.save(existing);
-                })
-                .orElseThrow(() -> new RuntimeException("Plan not found with id: " + id));
+    public PlanResponseDto createPlan(@Valid PlanRequestDto dto) {
+        Plan entity = toEntity(dto);
+        entity.setActive("1");
+        planRepository.save(entity);
+        return toDto(entity);
     }
 
-    public void delete(Long id) {
-        planRepository.findById(id)
-                .map(existing -> {
-                    existing.setActive("0");
-                    return planRepository.save(existing);
-                })
-                .orElseThrow(() -> new RuntimeException("Plan not found with id: " + id));
+    @Transactional
+    public PlanResponseDto updatePlan(Long id, @Valid PlanRequestDto dto) {
+        Plan existing = planRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Plan not found"));
+
+        Plan updated = toEntity(dto);
+        updated.setIdPlan(existing.getIdPlan());
+        updated.setActive(existing.getActive());
+
+        planRepository.save(updated);
+        return toDto(updated);
+    }
+
+    public void deletePlan(Long id) {
+        Plan plan = planRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Plan not found"));
+
+        plan.setActive("0");
+        planRepository.save(plan);
     }
 }

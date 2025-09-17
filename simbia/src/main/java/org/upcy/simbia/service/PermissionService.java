@@ -1,65 +1,63 @@
 package org.upcy.simbia.service;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.upcy.simbia.dto.PermissionDto;
+import org.upcy.simbia.dto.request.PermissionRequestDto;
+import org.upcy.simbia.dto.response.PermissionResponseDto;
 import org.upcy.simbia.model.Permission;
 import org.upcy.simbia.repository.PermissionRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PermissionService {
 
-    private final PermissionRepository repository;
+    private final PermissionRepository permissionRepository;
 
-    public PermissionService(PermissionRepository repository) {
-        this.repository = repository;
+    private PermissionResponseDto toDto(Permission permission) {
+        PermissionResponseDto dto = new PermissionResponseDto();
+        dto.setPermissionName(permission.getPermissionName());
+        return dto;
     }
 
-    public PermissionDto create(PermissionDto dto) {
-        Permission permission = new Permission();
-        permission.setPermissionName(dto.getPermissionName());
-        permission.setActive("1");
-        Permission saved = repository.save(permission);
-        return toDto(saved);
-    }
-
-    public List<PermissionDto> findAll() {
-        return repository.findAll()
+    public List<PermissionResponseDto> listPermissions() {
+        return permissionRepository.findAll()
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public PermissionDto findById(Long id) {
-        Optional<Permission> permission = repository.findById(id);
-        return permission.map(this::toDto).orElse(null);
+    public PermissionResponseDto findPermissionById(Long id) {
+        Permission permission = permissionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Permission not found"));
+        return toDto(permission);
     }
 
-    public PermissionDto update(Long id, PermissionDto dto) {
-        Optional<Permission> opt = repository.findById(id);
-        if (opt.isPresent()) {
-            Permission permission = opt.get();
-            permission.setPermissionName(dto.getPermissionName());
-            Permission updated = repository.save(permission);
-            return toDto(updated);
-        }
-        return null;
+    public PermissionResponseDto createPermission(PermissionRequestDto dto) {
+        Permission permission = new Permission();
+        permission.setPermissionName(dto.getPermissionName());
+        permission.setActive("1");
+        Permission saved = permissionRepository.save(permission);
+        return toDto(saved);
     }
 
-    public boolean delete(Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+    @Transactional
+    public PermissionResponseDto updatePermission(Long id, PermissionRequestDto dto) {
+        Permission existing = permissionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Permission not found"));
+        existing.setPermissionName(dto.getPermissionName());
+        permissionRepository.save(existing);
+        return toDto(existing);
     }
 
-    private PermissionDto toDto(Permission permission) {
-        PermissionDto dto = new PermissionDto();
-        dto.setPermissionName(permission.getPermissionName());
-        return dto;
+    public void deletePermission(Long id) {
+        Permission existing = permissionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Permission not found"));
+        existing.setActive("0");
+        permissionRepository.save(existing);
     }
 }

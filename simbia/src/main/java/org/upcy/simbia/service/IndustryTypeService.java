@@ -1,7 +1,13 @@
 package org.upcy.simbia.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.upcy.simbia.dto.IndustryTypeDto;
+import org.upcy.simbia.dto.request.IndustryTypeRequestDto;
+import org.upcy.simbia.dto.response.IndustryTypeResponseDto;
 import org.upcy.simbia.model.IndustryType;
 import org.upcy.simbia.repository.IndustryTypeRepository;
 
@@ -9,21 +15,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class IndustryTypeService {
 
     private final IndustryTypeRepository repository;
+    private final ObjectMapper objectMapper;
 
-    public IndustryTypeService(IndustryTypeRepository repository) {
-        this.repository = repository;
+    private IndustryTypeResponseDto toDto(IndustryType entity) {
+        return objectMapper.convertValue(entity, IndustryTypeResponseDto.class);
     }
 
-    public IndustryTypeDto create(IndustryTypeDto dto) {
-        if (dto.getIndustryTypeName() == null || dto.getIndustryTypeName().trim().isEmpty()) {
-            throw new RuntimeException("O nome do tipo de empresa não pode ser nulo ou vazio");
+    public IndustryTypeResponseDto createIndustryType(@Valid IndustryTypeRequestDto dto) {
+        if (dto.getIndustryName() == null || dto.getIndustryName().trim().isEmpty()) {
+            throw new RuntimeException("Industry name must not be null or empty");
         }
 
         IndustryType entity = new IndustryType();
-        entity.setIndustryTypeName(dto.getIndustryTypeName());
+        entity.setIndustryTypeName(dto.getIndustryName());
         entity.setInfo(dto.getInfo() != null ? dto.getInfo() : "");
         entity.setActive("1");
 
@@ -31,23 +39,24 @@ public class IndustryTypeService {
         return toDto(saved);
     }
 
-    public IndustryTypeDto findById(Long id) {
-        return repository.findById(id)
-                .map(this::toDto)
-                .orElseThrow(() -> new RuntimeException("IndustryType não encontrado"));
+    public IndustryTypeResponseDto findById(Long id) {
+        IndustryType entity = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Industry type not found"));
+        return toDto(entity);
     }
 
-    public List<IndustryTypeDto> findAll() {
+    public List<IndustryTypeResponseDto> findAll() {
         return repository.findAll()
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public IndustryTypeDto update(Long id, IndustryTypeDto dto) {
+    @Transactional
+    public IndustryTypeResponseDto updateIndustryType(Long id, @Valid IndustryTypeRequestDto dto) {
         IndustryType entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("IndustryType não encontrado"));
-        entity.setIndustryTypeName(dto.getIndustryTypeName());
+                .orElseThrow(() -> new EntityNotFoundException("Industry type not found"));
+        entity.setIndustryTypeName(dto.getIndustryName());
         entity.setInfo(dto.getInfo());
         return toDto(repository.save(entity));
     }
