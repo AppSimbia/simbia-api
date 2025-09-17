@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.contract.ProductCategoryContract;
-import org.upcy.simbia.dto.ProductCategoryDto;
-import org.upcy.simbia.model.ProductCategory;
+import org.upcy.simbia.dto.request.ProductCategoryRequestDto;
+import org.upcy.simbia.dto.response.ProductCategoryResponseDto;
 import org.upcy.simbia.service.ProductCategoryService;
 
 import java.util.List;
@@ -17,28 +17,28 @@ public class ProductCategoryController implements ProductCategoryContract {
     private final ProductCategoryService productCategoryService;
 
     @Override
-    public ResponseEntity<ProductCategory> create(ProductCategoryDto dto) {
-        return ResponseEntity.ok(productCategoryService.create(dto));
+    public ResponseEntity<ProductCategoryResponseDto> createProductCategory(ProductCategoryRequestDto dto) {
+        return ResponseEntity.status(201).body(productCategoryService.createProductCategory(dto));
     }
 
     @Override
-    public ResponseEntity<List<ProductCategory>> findAll() {
-        return ResponseEntity.ok(productCategoryService.findAll());
+    public ResponseEntity<List<ProductCategoryResponseDto>> listProductCategories() {
+        return ResponseEntity.ok(productCategoryService.listProductCategories());
     }
 
     @Override
-    public ResponseEntity<ProductCategory> findById(Long id) {
-        return ResponseEntity.ok(productCategoryService.findById(id));
+    public ResponseEntity<ProductCategoryResponseDto> findProductCategoryById(Long id) {
+        return ResponseEntity.ok(productCategoryService.findProductCategoryById(id));
     }
 
     @Override
-    public ResponseEntity<ProductCategory> update(Long id, ProductCategoryDto dto) {
-        return ResponseEntity.ok(productCategoryService.update(id, dto));
+    public ResponseEntity<ProductCategoryResponseDto> updateProductCategory(Long id, ProductCategoryRequestDto dto) {
+        return ResponseEntity.ok(productCategoryService.updateProductCategory(id, dto));
     }
 
     @Override
-    public ResponseEntity<Void> delete(Long id) {
-        productCategoryService.delete(id);
+    public ResponseEntity<Void> deleteProductCategory(Long id) {
+        productCategoryService.deleteProductCategory(id);
         return ResponseEntity.noContent().build();
     }
 }

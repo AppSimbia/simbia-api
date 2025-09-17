@@ -11,16 +11,19 @@ import java.util.Date;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idPost;
 
     @ManyToOne
-    private ProductCategory productCategory;
+    @JoinColumn(name = "idProductCategory", nullable = false)
+    private ProductCategory idProductCategory;
 
     @ManyToOne
-    private Industry industry;
+    @JoinColumn(name = "idIndustry", nullable = false)
+    private Industry idIndustry;
 
     @ManyToOne
-    private Employee employee;
+    @JoinColumn(name = "idEmployee", nullable = false)
+    private Employee idEmployee;
 
     @Column(name = "cTitle")
     private String title;

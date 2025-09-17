@@ -1,9 +1,9 @@
-package org.upcy.simbia.dto;
+package org.upcy.simbia.dto.response;
 
 import lombok.Data;
 
 @Data
-public class ProductCategoryDto {
+public class ProductCategoryResponseDto {
     private String categoryName;
     private String info;
 }

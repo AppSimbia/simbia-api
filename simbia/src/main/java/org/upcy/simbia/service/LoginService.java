@@ -1,61 +1,83 @@
 package org.upcy.simbia.service;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.upcy.simbia.dto.request.LoginRequestDto;
+import org.upcy.simbia.dto.response.LoginResponseDto;
 import org.upcy.simbia.model.Login;
-import org.upcy.simbia.dto.LoginDto;
 import org.upcy.simbia.repository.LoginRepository;
 
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class LoginService {
 
     private final LoginRepository loginRepository;
 
-    public LoginService(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
+    private LoginResponseDto toDto(Login login) {
+        LoginResponseDto dto = new LoginResponseDto();
+        dto.setUserName(login.getUserName());
+        dto.setPwdUUID(login.getPwdUUID());
+        return dto;
     }
 
-    public Login create(LoginDto dto) {
+    public LoginResponseDto createLogin(LoginRequestDto dto) {
         Login login = new Login();
         login.setUserName(dto.getUserName());
         login.setPwdUUID(dto.getPwdUUID());
-        login.setIsFirstLogin(dto.getIsFirstLogin());
+        login.setIsFirstLogin("1");
         login.setActive("1");
         login.setLastChange(new Date());
         login.setLastLogin(new Date());
-        return loginRepository.save(login);
+        loginRepository.save(login);
+        return toDto(login);
     }
 
-    public Optional<Login> findById(Long id) {
-        return loginRepository.findById(id)
-                .filter(login -> "1".equals(login.getActive()));
+    public LoginResponseDto findLoginById(Long id) {
+        Login login = loginRepository.findById(id)
+                .filter(l -> "1".equals(l.getActive()))
+                .orElseThrow(() -> new EntityNotFoundException("Login not found"));
+        return toDto(login);
     }
 
-    public Optional<Login> update(Long id, LoginDto dto) {
-        return loginRepository.findById(id).map(existing -> {
-            existing.setUserName(dto.getUserName());
-            existing.setPwdUUID(dto.getPwdUUID());
-            existing.setIsFirstLogin(dto.getIsFirstLogin());
-            existing.setLastChange(new Date());
-            return loginRepository.save(existing);
-        });
+    @Transactional
+    public LoginResponseDto updateLogin(Long id, LoginRequestDto dto) {
+        Login login = loginRepository.findById(id)
+                .filter(l -> "1".equals(l.getActive()))
+                .orElseThrow(() -> new EntityNotFoundException("Login not found"));
+        login.setUserName(dto.getUserName());
+        login.setPwdUUID(dto.getPwdUUID());
+        login.setLastChange(new Date());
+        loginRepository.save(login);
+        return toDto(login);
     }
 
-    public boolean delete(Long id) {
-        return loginRepository.findById(id).map(existing -> {
-            existing.setActive("0");
-            existing.setLastChange(new Date());
-            loginRepository.save(existing);
-            return true;
-        }).orElse(false);
+    public void deleteLogin(Long id) {
+        Login login = loginRepository.findById(id)
+                .filter(l -> "1".equals(l.getActive()))
+                .orElseThrow(() -> new EntityNotFoundException("Login not found"));
+        login.setActive("0");
+        login.setLastChange(new Date());
+        loginRepository.save(login);
+    }
+
+    public List<LoginResponseDto> listLogins() {
+        return loginRepository.findAll()
+                .stream()
+                .filter(l -> "1".equals(l.getActive()))
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     public void updateLastLogin(Long id) {
-        loginRepository.findById(id).ifPresent(existing -> {
-            existing.setLastLogin(new Date());
-            loginRepository.save(existing);
+        loginRepository.findById(id).ifPresent(login -> {
+            login.setLastLogin(new Date());
+            loginRepository.save(login);
         });
     }
 }

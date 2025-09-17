@@ -9,11 +9,13 @@ import lombok.Data;
 public class RoleEmployee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idRoleEmployee;
 
     @ManyToOne
-    private Employee employee;
+    @JoinColumn(name = "idEmployee", nullable = false)
+    private Employee idEmployee;
 
     @ManyToOne
-    private Role role;
+    @JoinColumn(name = "idRole", nullable = false)
+    private Role idRole;
 }

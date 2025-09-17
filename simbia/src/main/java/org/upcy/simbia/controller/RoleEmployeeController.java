@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.contract.RoleEmployeeContract;
-import org.upcy.simbia.dto.RoleEmployeeDto;
-import org.upcy.simbia.model.RoleEmployee;
+import org.upcy.simbia.dto.request.RoleEmployeeRequestDto;
+import org.upcy.simbia.dto.response.RoleEmployeeResponseDto;
 import org.upcy.simbia.service.RoleEmployeeService;
 
 import java.util.List;
@@ -17,28 +17,28 @@ public class RoleEmployeeController implements RoleEmployeeContract {
     private final RoleEmployeeService roleEmployeeService;
 
     @Override
-    public ResponseEntity<RoleEmployee> create(RoleEmployeeDto dto) {
-        return ResponseEntity.ok(roleEmployeeService.create(dto));
+    public ResponseEntity<RoleEmployeeResponseDto> createRoleEmployee(RoleEmployeeRequestDto dto) {
+        return ResponseEntity.status(201).body(roleEmployeeService.createRoleEmployee(dto));
     }
 
     @Override
-    public ResponseEntity<List<RoleEmployee>> findAll() {
-        return ResponseEntity.ok(roleEmployeeService.findAll());
+    public ResponseEntity<List<RoleEmployeeResponseDto>> listRoleEmployees() {
+        return ResponseEntity.ok(roleEmployeeService.listRoleEmployees());
     }
 
     @Override
-    public ResponseEntity<RoleEmployee> findById(Long id) {
-        return ResponseEntity.ok(roleEmployeeService.findById(id));
+    public ResponseEntity<RoleEmployeeResponseDto> findRoleEmployeeById(Long id) {
+        return ResponseEntity.ok(roleEmployeeService.findRoleEmployeeById(id));
     }
 
     @Override
-    public ResponseEntity<RoleEmployee> update(Long id, RoleEmployeeDto dto) {
-        return ResponseEntity.ok(roleEmployeeService.update(id, dto));
+    public ResponseEntity<RoleEmployeeResponseDto> updateRoleEmployee(Long id, RoleEmployeeRequestDto dto) {
+        return ResponseEntity.ok(roleEmployeeService.updateRoleEmployee(id, dto));
     }
 
     @Override
-    public ResponseEntity<Void> delete(Long id) {
-        roleEmployeeService.delete(id);
+    public ResponseEntity<Void> deleteRoleEmployee(Long id) {
+        roleEmployeeService.deleteRoleEmployee(id);
         return ResponseEntity.noContent().build();
     }
 }

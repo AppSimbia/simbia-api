@@ -1,14 +1,14 @@
-package org.upcy.simbia.dto;
+package org.upcy.simbia.dto.response;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class PostDto {
-    private Long productCategory;
-    private Long industry;
-    private Long employee;
+public class PostResponseDto {
+    private Long idProductCategory;
+    private Long idIndustry;
+    private Long idEmployee;
     private String title;
     private String description;
     private int quantity;

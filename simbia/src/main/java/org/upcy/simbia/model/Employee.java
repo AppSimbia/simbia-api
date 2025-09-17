@@ -9,10 +9,10 @@ import lombok.Data;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idEmployee;
 
     @ManyToOne
-    private Login login;
+    private Login idLogin;
 
     @Column(name = "cEmployeeName")
     private String employeeName;

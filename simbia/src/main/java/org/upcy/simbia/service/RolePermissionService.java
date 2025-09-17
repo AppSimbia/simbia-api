@@ -1,16 +1,20 @@
 package org.upcy.simbia.service;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.upcy.simbia.dto.RolePermissionDto;
+import org.upcy.simbia.dto.request.RolePermissionRequestDto;
+import org.upcy.simbia.dto.response.RolePermissionResponseDto;
+import org.upcy.simbia.model.Permission;
 import org.upcy.simbia.model.Role;
 import org.upcy.simbia.model.RolePermission;
-import org.upcy.simbia.model.Permission;
+import org.upcy.simbia.repository.PermissionRepository;
 import org.upcy.simbia.repository.RolePermissionRepository;
 import org.upcy.simbia.repository.RoleRepository;
-import org.upcy.simbia.repository.PermissionRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,35 +24,54 @@ public class RolePermissionService {
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
 
-    public RolePermission create(RolePermissionDto dto) {
-        Role role = roleRepository.findById(dto.getRole())
-                .orElseThrow(() -> new RuntimeException("Role não encontrado"));
-
-        Permission permission = permissionRepository.findById(dto.getPermission())
-                .orElseThrow(() -> new RuntimeException("Permission não encontrado"));
-
-        RolePermission rolePermission = new RolePermission();
-        rolePermission.setRole(role);
-        rolePermission.setPermission(permission);
-        rolePermission.setActive("1");
-
-        return rolePermissionRepository.save(rolePermission);
+    private RolePermissionResponseDto toDto(RolePermission entity) {
+        RolePermissionResponseDto dto = new RolePermissionResponseDto();
+        dto.setIdRole(entity.getIdRole().getIdRole());
+        dto.setIdPermission(entity.getIdPermission().getIdPermission());
+        return dto;
     }
 
-    public List<RolePermission> findAll() {
-        return rolePermissionRepository.findAll();
+    private Role getRole(Long id) {
+        return roleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Role not found"));
     }
 
-    public RolePermission findById(Long id) {
-        return rolePermissionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("RolePermission não encontrado"));
+    private Permission getPermission(Long id) {
+        return permissionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Permission not found"));
     }
 
-    public void delete(Long id) {
-        RolePermission bp = findById(id);
-        if (!"0".equals(bp.getActive())) {
-            bp.setActive("0");
-            rolePermissionRepository.save(bp);
-        }
+    public List<RolePermissionResponseDto> listRolePermissions() {
+        return rolePermissionRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public RolePermissionResponseDto findRolePermissionById(Long id) {
+        RolePermission entity = rolePermissionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("RolePermission not found"));
+        return toDto(entity);
+    }
+
+    public RolePermissionResponseDto createRolePermission(RolePermissionRequestDto dto) {
+        Role role = getRole(dto.getIdRole());
+        Permission permission = getPermission(dto.getIdPermission());
+
+        RolePermission entity = new RolePermission();
+        entity.setIdRole(role);
+        entity.setIdPermission(permission);
+        entity.setActive("1");
+
+        rolePermissionRepository.save(entity);
+        return toDto(entity);
+    }
+
+    @Transactional
+    public void deleteRolePermission(Long id) {
+        RolePermission entity = rolePermissionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("RolePermission not found"));
+        entity.setActive("0");
+        rolePermissionRepository.save(entity);
     }
 }

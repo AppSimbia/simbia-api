@@ -7,14 +7,13 @@ import lombok.Data;
 @Entity
 @Table(name = "Permission")
 public class Permission {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idPermission;
 
     @Column(name = "cPermissionName")
     private String permissionName;
 
     @Column(name = "cActive", nullable = false, length = 1)
-    private String active = "1";
+    private String active;
 }

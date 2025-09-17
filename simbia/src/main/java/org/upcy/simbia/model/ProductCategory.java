@@ -9,7 +9,7 @@ import lombok.Data;
 public class ProductCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idProductCategory;
 
     @Column(name = "cCategoryName")
     private String categoryName;
