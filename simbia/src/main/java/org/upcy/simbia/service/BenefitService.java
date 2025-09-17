@@ -47,6 +47,7 @@ public class BenefitService {
         entity.setActive("1");
         benefitRepository.save(entity);
         return toDto(entity);
+
     }
 
     public void deleteBenefit(Long id) {
