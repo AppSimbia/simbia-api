@@ -69,8 +69,8 @@ public class MatchService {
         Industry destine = getIndustry(dto.getIndustryDestine());
 
         Match entity = new Match();
-        entity.setEmployee(employee);
-        entity.setPost(post);
+        entity.setIdEmployee(employee);
+        entity.setIdPost(post);
         entity.setIndustryOrigin(origin);
         entity.setIndustryDestine(destine);
         entity.setStatus("1");
@@ -89,8 +89,8 @@ public class MatchService {
         Industry origin = getIndustry(dto.getIndustryOrigin());
         Industry destine = getIndustry(dto.getIndustryDestine());
 
-        existing.setEmployee(employee);
-        existing.setPost(post);
+        existing.setIdEmployee(employee);
+        existing.setIdPost(post);
         existing.setIndustryOrigin(origin);
         existing.setIndustryDestine(destine);
 
