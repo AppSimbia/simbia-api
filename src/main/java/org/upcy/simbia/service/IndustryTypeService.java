@@ -68,11 +68,4 @@ public class IndustryTypeService {
             return true;
         }).orElse(false);
     }
-
-    private IndustryTypeDto toDto(IndustryType entity) {
-        IndustryTypeDto dto = new IndustryTypeDto();
-        dto.setIndustryTypeName(entity.getIndustryTypeName());
-        dto.setInfo(entity.getInfo());
-        return dto;
-    }
 }

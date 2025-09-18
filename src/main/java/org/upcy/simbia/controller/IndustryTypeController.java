@@ -38,7 +38,7 @@ public class IndustryTypeController implements IndustryTypeContract {
 
     @Override
     public ResponseEntity<Void> deleteIndustryType(Long id) {
-        service.deleteIndustryType(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
