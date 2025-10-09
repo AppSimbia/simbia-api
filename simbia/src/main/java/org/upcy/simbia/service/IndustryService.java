@@ -5,12 +5,12 @@ import org.upcy.simbia.dto.request.IndustryRequestDto;
 import org.upcy.simbia.dto.response.IndustryResponseDto;
 import org.upcy.simbia.model.Industry;
 import org.upcy.simbia.model.IndustryType;
-import org.upcy.simbia.model.Login;
+import org.upcy.simbia.model.LoginIndustry;
 import org.upcy.simbia.model.Plan;
 import org.upcy.simbia.repository.IndustryRepository;
 import org.upcy.simbia.repository.IndustryTypeRepository;
 import org.upcy.simbia.repository.PlanRepository;
-import org.upcy.simbia.repository.LoginRepository;
+import org.upcy.simbia.repository.LoginIndustryRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -22,12 +22,12 @@ public class IndustryService {
     private final IndustryRepository industryRepository;
     private final IndustryTypeRepository industryTypeRepository;
     private final PlanRepository planRepository;
-    private final LoginRepository loginRepository;
+    private final LoginIndustryRepository loginRepository;
 
     public IndustryService(IndustryRepository industryRepository,
                            IndustryTypeRepository industryTypeRepository,
                            PlanRepository planRepository,
-                           LoginRepository loginRepository) {
+                           LoginIndustryRepository loginRepository) {
         this.industryRepository = industryRepository;
         this.industryTypeRepository = industryTypeRepository;
         this.planRepository = planRepository;
@@ -38,7 +38,7 @@ public class IndustryService {
         Industry industry = new Industry();
         industry.setIndustryType(getIndustryType(dto.getIdIndustryType()));
         industry.setIdPlan(getPlan(dto.getIdPlan()));
-        industry.setIdLogin(getLogin(dto.getIdLogin()));
+        industry.setIdLoginIndustry(getLogin(dto.getIdLoginIndustry()));
         industry.setCnpj(dto.getCnpj());
         industry.setIndustryName(dto.getIndustryName());
         industry.setDescription(dto.getDescription());
@@ -64,7 +64,7 @@ public class IndustryService {
         return industryRepository.findById(id).map(existing -> {
             existing.setIndustryType(getIndustryType(dto.getIdIndustryType()));
             existing.setIdPlan(getPlan(dto.getIdPlan()));
-            existing.setIdLogin(getLogin(dto.getIdLogin()));
+            existing.setIdLoginIndustry(getLogin(dto.getIdLoginIndustry()));
             existing.setCnpj(dto.getCnpj());
             existing.setIndustryName(dto.getIndustryName());
             existing.setDescription(dto.getDescription());
@@ -95,16 +95,16 @@ public class IndustryService {
                 .orElseThrow(() -> new EntityNotFoundException("Plan not found: " + id));
     }
 
-    private Login getLogin(Long id) {
+    private LoginIndustry getLogin(Long id) {
         return loginRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Login not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("LoginIndustry not found: " + id));
     }
 
     private IndustryResponseDto toDto(Industry industry) {
         IndustryResponseDto dto = new IndustryResponseDto();
         dto.setIdIndustryType(industry.getIndustryType().getIdIndustryType());
         dto.setIdPlan(industry.getIdPlan().getIdPlan());
-        dto.setIdLogin(industry.getIdLogin().getIdLogin());
+        dto.setIdLoginIndustry(industry.getIdLoginIndustry().getIdLogin());
         dto.setCnpj(industry.getCnpj());
         dto.setIndustryName(industry.getIndustryName());
         dto.setDescription(industry.getDescription());

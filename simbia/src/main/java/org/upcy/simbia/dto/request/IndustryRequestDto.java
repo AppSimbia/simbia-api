@@ -20,7 +20,7 @@ public class IndustryRequestDto {
 
     @Schema(example = "3", description = "ID of the associated login")
     @NotNull(groups = OnCreate.class)
-    private Long idLogin;
+    private Long idLoginIndustry;
 
     @Schema(example = "12.345.678/0001-90", description = "Industry CNPJ")
     @NotNull(groups = OnCreate.class)

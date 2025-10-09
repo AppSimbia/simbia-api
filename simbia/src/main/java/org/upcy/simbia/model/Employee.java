@@ -12,7 +12,7 @@ public class Employee {
     private Long idEmployee;
 
     @ManyToOne
-    private Login idLogin;
+    private Industry idIndustry;
 
     @Column(name = "cEmployeeName")
     private String employeeName;

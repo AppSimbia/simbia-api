@@ -3,31 +3,31 @@ package org.upcy.simbia.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.upcy.simbia.contract.LoginContract;
-import org.upcy.simbia.dto.request.LoginRequestDto;
-import org.upcy.simbia.dto.response.LoginResponseDto;
-import org.upcy.simbia.service.LoginService;
+import org.upcy.simbia.contract.LoginIndustryContract;
+import org.upcy.simbia.dto.request.LoginIndustryRequestDto;
+import org.upcy.simbia.dto.response.LoginIndustryResponseDto;
+import org.upcy.simbia.service.LoginIndustryService;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class LoginController implements LoginContract {
+public class LoginIndustryController implements LoginIndustryContract {
 
-    private final LoginService loginService;
+    private final LoginIndustryService loginService;
 
     @Override
-    public ResponseEntity<LoginResponseDto> createLogin(LoginRequestDto dto) {
+    public ResponseEntity<LoginIndustryResponseDto> createLogin(LoginIndustryRequestDto dto) {
         return ResponseEntity.status(201).body(loginService.createLogin(dto));
     }
 
     @Override
-    public ResponseEntity<LoginResponseDto> findLoginById(Long id) {
+    public ResponseEntity<LoginIndustryResponseDto> findLoginById(Long id) {
         return ResponseEntity.ok(loginService.findLoginById(id));
     }
 
     @Override
-    public ResponseEntity<LoginResponseDto> updateLogin(Long id, LoginRequestDto dto) {
+    public ResponseEntity<LoginIndustryResponseDto> updateLogin(Long id, LoginIndustryRequestDto dto) {
         return ResponseEntity.ok(loginService.updateLogin(id, dto));
     }
 
@@ -38,7 +38,7 @@ public class LoginController implements LoginContract {
     }
 
     @Override
-    public ResponseEntity<List<LoginResponseDto>> listLogins() {
+    public ResponseEntity<List<LoginIndustryResponseDto>> listLogins() {
         return ResponseEntity.ok(loginService.listLogins());
     }
 

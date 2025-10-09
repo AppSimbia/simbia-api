@@ -50,4 +50,7 @@ public class PostRequestDto {
 
     @Schema(example = "2025-09-16", description = "Date when the post was published")
     private Date publicationDate;
+
+    @Schema(example = "Andamento", description = "Vou pensar ainda")
+    private String status;
 }

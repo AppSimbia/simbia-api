@@ -8,7 +8,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "logn")
-public class Login {
+public class LoginIndustry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idLogin;
@@ -27,9 +27,6 @@ public class Login {
 
     @Column(name = "dLastChange")
     private Date lastChange;
-
-    @Column(name = "dLastLogin")
-    private Date lastLogin;
 
     @Column(name = "cActive", nullable = false, length = 1)
     private String active;

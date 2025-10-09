@@ -20,7 +20,7 @@ public class Industry {
     private Plan idPlan;
 
     @ManyToOne
-    private Login idLogin;
+    private LoginIndustry idLoginIndustry;
 
     @CNPJ
     @Column(name = "cCNPJ")

@@ -11,6 +11,10 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idRole;
 
+    @ManyToOne
+    @JoinColumn(name = "idIndustry")
+    private Industry idIndustry;
+
     @Column(name = "cRoleName")
     private String roleName;
 

@@ -43,6 +43,9 @@ public class Post {
     @Column(name = "dPublication")
     private Date publicationDate;
 
+    @Column(name = "cStatus", nullable = false, length = 1)
+    private String status;
+
     @Column(name = "cActive", nullable = false, length = 1)
     private String active;
 }

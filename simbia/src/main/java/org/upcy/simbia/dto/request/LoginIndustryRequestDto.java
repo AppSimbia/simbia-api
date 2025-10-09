@@ -7,7 +7,7 @@ import lombok.Data;
 import org.upcy.simbia.validation.OnCreate;
 
 @Data
-public class LoginRequestDto {
+public class LoginIndustryRequestDto {
     @Schema(example = "john.doe", description = "Username of the user")
     @NotNull(message = "Username must not be null", groups = OnCreate.class)
     @Pattern(regexp = ".*\\S.*\\S.*", message = "Username must be at least 2 non-blank characters")
