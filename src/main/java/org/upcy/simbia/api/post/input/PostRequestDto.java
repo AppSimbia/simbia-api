@@ -1,8 +1,7 @@
-package org.upcy.simbia.dto.request;
+package org.upcy.simbia.api.post.input;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.upcy.simbia.validation.OnCreate;
@@ -11,9 +10,6 @@ import java.util.Date;
 
 @Data
 public class PostRequestDto {
-    @Schema(example = "3", description = "ID of the associated login")
-    @NotNull(groups = OnCreate.class)
-    private Long idLogin;
 
     @Schema(example = "5", description = "Product category ID")
     @NotNull(message = "Product category ID must not be null", groups = OnCreate.class)
@@ -44,6 +40,14 @@ public class PostRequestDto {
     @Schema(example = "kg", description = "Measurement unit for the quantity")
     @NotNull(message = "Measure unit must not be null", groups = OnCreate.class)
     private String measureUnit;
+
+    @Schema(example = "1", description = "Classification available")
+    @NotNull(message = "Classification must not be null", groups = OnCreate.class)
+    private String classification;
+
+    @Schema(example = "1", description = "Status available")
+    @NotNull(message = "Status must not be null", groups = OnCreate.class)
+    private String status;
 
     @Schema(example = "base64-image-data", description = "Base64 encoded image")
     private String image;

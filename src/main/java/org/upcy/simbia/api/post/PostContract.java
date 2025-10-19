@@ -1,15 +1,19 @@
-package org.upcy.simbia.contract;
+package org.upcy.simbia.api.post;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.hibernate.validator.constraints.br.CNPJ;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.upcy.simbia.dto.request.PostRequestDto;
-import org.upcy.simbia.dto.response.PostResponseDto;
+import org.upcy.simbia.api.post.input.PostRequestDto;
+import org.upcy.simbia.api.post.output.PostResponseDto;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/posts")
 public interface PostContract {
@@ -26,8 +30,8 @@ public interface PostContract {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "List of posts successfully returned")
     })
-    @GetMapping
-    ResponseEntity<List<PostResponseDto>> findAll();
+    @GetMapping("/list/{cnpj}")
+    ResponseEntity<List<PostResponseDto>> findAllByIndustry(@CNPJ @PathVariable("cnpj") String cnpj);
 
     @Operation(summary = "Get a post by ID")
     @ApiResponses({
@@ -44,7 +48,7 @@ public interface PostContract {
             @ApiResponse(responseCode = "404", description = "Post not found")
     })
     @PutMapping("/{id}")
-    ResponseEntity<PostResponseDto> update(@PathVariable Long id, @Valid @RequestBody PostRequestDto dto);
+    ResponseEntity<PostResponseDto> update(@PathVariable Long id, @RequestBody Map<String, Object> map) throws JsonMappingException;
 
     @Operation(summary = "Delete a post by ID")
     @ApiResponses({
