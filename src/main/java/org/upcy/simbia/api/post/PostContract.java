@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.hibernate.validator.constraints.br.CNPJ;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upcy.simbia.api.post.input.PostRequestDto;
 import org.upcy.simbia.api.post.output.PostResponseDto;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 

@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.upcy.simbia.api.employee.output.EmployeeResponseDto;
-import org.upcy.simbia.api.industry.output.IndustryResponseDto;
 import org.upcy.simbia.dataprovider.persistence.entity.ProductCategory;
 
 import java.util.Date;
