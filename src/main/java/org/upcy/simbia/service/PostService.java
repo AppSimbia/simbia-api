@@ -1,113 +1,98 @@
 package org.upcy.simbia.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.upcy.simbia.dto.request.PostRequestDto;
-import org.upcy.simbia.dto.response.PostResponseDto;
-import org.upcy.simbia.model.*;
-import org.upcy.simbia.repository.*;
+import org.upcy.simbia.api.post.input.PostRequestDto;
+import org.upcy.simbia.api.post.output.PostResponseDto;
+import org.upcy.simbia.dataprovider.persistence.entity.Employee;
+import org.upcy.simbia.dataprovider.persistence.entity.Industry;
+import org.upcy.simbia.dataprovider.persistence.entity.Post;
+import org.upcy.simbia.dataprovider.persistence.entity.ProductCategory;
+import org.upcy.simbia.dataprovider.persistence.repository.PostRepository;
+import org.upcy.simbia.dataprovider.persistence.repository.ProductCategoryRepository;
+import org.upcy.simbia.mapper.PostMapper;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class PostService implements CrudService<Post, Long, PostRequestDto, PostResponseDto> {
 
+    private static final PostMapper postMapper = new PostMapper();
+    private final IndustryService industryService;
+    private final EmployeeService employeeService;
     private final PostRepository postRepository;
     private final ProductCategoryRepository productCategoryRepository;
-    private final IndustryRepository industryRepository;
-    private final EmployeeRepository employeeRepository;
-    private final ObjectMapper objectMapper;
 
-    private PostResponseDto toDto(Post entity) {
-        return objectMapper.convertValue(entity, PostResponseDto.class);
+    @Override
+    public PostResponseDto save(PostRequestDto request) {
+        Post post = toEntity(request);
+        mapRelationships(post, request);
+        post.setId(postRepository.generateId());
+        return toResponse(postRepository.save(post));
     }
 
-    private ProductCategory getProductCategory(Long id) {
-        return productCategoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Product category not found"));
+    @Override
+    public PostResponseDto findById(Long id) {
+        return toResponse(findEntityById(id));
     }
 
-    private Industry getIndustry(Long id) {
-        return industryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Industry not found"));
+    @Override
+    public PostResponseDto update(Long id, Map<String, Object> map) throws JsonMappingException {
+        Post post = findEntityById(id);
+        postMapper.updateFromMap(post, map);
+        return toResponse(postRepository.save(post));
     }
 
-    private Employee getEmployee(Long id) {
-        return employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
-    }
-
-    public List<PostResponseDto> listPosts() {
-        return postRepository.findAll()
-                .stream()
-                .filter(p -> "1".equals(p.getActive()))
-                .map(this::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public PostResponseDto findPost(Long id) {
-        Post post = postRepository.findById(id)
-                .filter(p -> "1".equals(p.getActive()))
-                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
-        return toDto(post);
-    }
-
-    public PostResponseDto insertPost(@Valid PostRequestDto dto) {
-        ProductCategory category = getProductCategory(dto.getIdProductCategory());
-        Industry industry = getIndustry(dto.getIdIndustry());
-        Employee employee = getEmployee(dto.getIdEmployee());
-
-        Post entity = new Post();
-        entity.setIdProductCategory(category);
-        entity.setIdIndustry(industry);
-        entity.setIdEmployee(employee);
-        entity.setTitle(dto.getTitle());
-        entity.setDescription(dto.getDescription());
-        entity.setQuantity(dto.getQuantity());
-        entity.setMeasureUnit(dto.getMeasureUnit());
-        entity.setImage(dto.getImage());
-        entity.setPublicationDate(dto.getPublicationDate());
-        entity.setActive("1");
-
-        postRepository.save(entity);
-        return toDto(entity);
-    }
-
-    @Transactional
-    public PostResponseDto updatePost(Long id, @Valid PostRequestDto dto) {
-        Post existing = postRepository.findById(id)
-                .filter(p -> "1".equals(p.getActive()))
-                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
-
-        ProductCategory category = getProductCategory(dto.getIdProductCategory());
-        Industry industry = getIndustry(dto.getIdIndustry());
-        Employee employee = getEmployee(dto.getIdEmployee());
-
-        existing.setIdProductCategory(category);
-        existing.setIdIndustry(industry);
-        existing.setIdEmployee(employee);
-        existing.setTitle(dto.getTitle());
-        existing.setDescription(dto.getDescription());
-        existing.setQuantity(dto.getQuantity());
-        existing.setMeasureUnit(dto.getMeasureUnit());
-        existing.setImage(dto.getImage());
-        existing.setPublicationDate(dto.getPublicationDate());
-
-        postRepository.save(existing);
-        return toDto(existing);
-    }
-
-    public void deletePost(Long id) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+    @Override
+    public void delete(Long id) {
+        Post post = findEntityById(id);
 
         post.setActive("0");
         postRepository.save(post);
+    }
+
+    @Override
+    public List<PostResponseDto> findAll() {
+        return postRepository.findAll()
+                .stream()
+                .filter(p -> "1".equals(p.getActive()))
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Post findEntityById(Long id) {
+        return postRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Post not found"));
+    }
+
+    public List<PostResponseDto> findAllByIndustry(String cnpj) {
+        return findAll().stream()
+                .filter(post -> post.getIndustryCnpj().equals(cnpj))
+                .collect(Collectors.toList());
+    }
+
+    private void mapRelationships(Post post, PostRequestDto dto) {
+        ProductCategory productCategory = productCategoryRepository.findById(dto.getIdProductCategory())
+                .orElseThrow(() -> new EntityNotFoundException("IndustryType not found: " + dto.getIdProductCategory()));
+        Industry industry = industryService.findEntityById(dto.getIdIndustry());
+        Employee employee = employeeService.findEntityById(dto.getIdEmployee());
+
+        post.setIdProductCategory(productCategory);
+        post.setIdIndustry(industry);
+        post.setIdEmployee(employee);
+    }
+
+    private Post toEntity(PostRequestDto dto) {
+        return postMapper.toEntity(dto);
+    }
+
+    private PostResponseDto toResponse(Post post) {
+        return postMapper.toResponse(post);
     }
 }
