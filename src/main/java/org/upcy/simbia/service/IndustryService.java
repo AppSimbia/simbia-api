@@ -1,118 +1,129 @@
 package org.upcy.simbia.service;
 
-import org.springframework.stereotype.Service;
-import org.upcy.simbia.dto.request.IndustryRequestDto;
-import org.upcy.simbia.dto.response.IndustryResponseDto;
-import org.upcy.simbia.model.Industry;
-import org.upcy.simbia.model.IndustryType;
-import org.upcy.simbia.model.Login;
-import org.upcy.simbia.model.Plan;
-import org.upcy.simbia.repository.IndustryRepository;
-import org.upcy.simbia.repository.IndustryTypeRepository;
-import org.upcy.simbia.repository.PlanRepository;
-import org.upcy.simbia.repository.LoginRepository;
-
+import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.upcy.simbia.api.industry.input.IndustryRequestDto;
+import org.upcy.simbia.api.industry.output.IndustryResponseDto;
+import org.upcy.simbia.dataprovider.client.cnpj.CnpjClient;
+import org.upcy.simbia.dataprovider.client.cnpj.dto.WsData;
+import org.upcy.simbia.dataprovider.persistence.entity.Industry;
+import org.upcy.simbia.dataprovider.persistence.entity.IndustryType;
+import org.upcy.simbia.dataprovider.persistence.entity.Login;
+import org.upcy.simbia.dataprovider.persistence.entity.Plan;
+import org.upcy.simbia.dataprovider.persistence.repository.IndustryRepository;
+import org.upcy.simbia.dataprovider.persistence.repository.IndustryTypeRepository;
+import org.upcy.simbia.mapper.IndustryMapper;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
-public class IndustryService {
+@RequiredArgsConstructor
+public class IndustryService implements CrudService<Industry, Long, IndustryRequestDto, IndustryResponseDto> {
 
+    private static final IndustryMapper industryMapper = new IndustryMapper();
+    private final LoginService loginService;
+    private final PlanService planService;
+    private final CnpjClient cnpjClient;
     private final IndustryRepository industryRepository;
     private final IndustryTypeRepository industryTypeRepository;
-    private final PlanRepository planRepository;
-    private final LoginRepository loginRepository;
 
-    public IndustryService(IndustryRepository industryRepository,
-                           IndustryTypeRepository industryTypeRepository,
-                           PlanRepository planRepository,
-                           LoginRepository loginRepository) {
-        this.industryRepository = industryRepository;
-        this.industryTypeRepository = industryTypeRepository;
-        this.planRepository = planRepository;
-        this.loginRepository = loginRepository;
+    @Override
+    public IndustryResponseDto save(IndustryRequestDto request) {
+        Industry industry = toIndustry(request);
+
+        WsData wsData = cnpjClient.getDomainByCnpj(request.getCnpj());
+        if (wsData.getEmails().stream().noneMatch(email -> request.getContactMail().endsWith(email.getDomain()))){
+            throw new RuntimeException("Contact email domain does not match any of the CNPJ email domains");
+        }
+
+        mapRelationships(industry, request);
+        industry.setId(industryRepository.generateId());
+        return toResponse(industryRepository.save(industry));
     }
 
-    public IndustryResponseDto createIndustry(IndustryRequestDto dto) {
-        Industry industry = new Industry();
-        industry.setIndustryType(getIndustryType(dto.getIdIndustryType()));
-        industry.setIdPlan(getPlan(dto.getIdPlan()));
-        industry.setIdLogin(getLogin(dto.getIdLogin()));
-        industry.setCnpj(dto.getCnpj());
-        industry.setIndustryName(dto.getIndustryName());
-        industry.setDescription(dto.getDescription());
-        industry.setContactMail(dto.getContactMail());
-        industry.setCep(dto.getCep());
-        industry.setCity(dto.getCity());
-        industry.setState(dto.getState());
-        industry.setImage(dto.getImage());
-        industry.setActive("1");
-
-        Industry saved = industryRepository.save(industry);
-        return toDto(saved);
+    @Override
+    public IndustryResponseDto findById(Long id) {
+        return toResponse(findEntityById(id));
     }
 
-    public Optional<IndustryResponseDto> findIndustryById(Long id) {
-        return industryRepository.findById(id)
+    @Override
+    public IndustryResponseDto update(Long id, Map<String, Object> map) throws JsonMappingException {
+        Industry industry = industryRepository.findById(id)
+                .filter(i -> "1".equals(i.getActive()))
+                .orElseThrow(EntityNotFoundException::new);
+        industryMapper.updateFromMap(industry, map);
+
+        return toResponse(industryRepository.save(industry));
+    }
+
+    public IndustryResponseDto update(String cnpj, Map<String, Object> map) throws JsonMappingException {
+        Industry industry = industryRepository.findIndustryByCnpj(cnpj)
+                .filter(i -> "1".equals(i.getActive()))
+                .orElseThrow(EntityNotFoundException::new);
+        industryMapper.updateFromMap(industry, map);
+
+        return toResponse(industryRepository.save(industry));
+    }
+
+    @Override
+    public void delete(Long id) {
+        Industry industry = findEntityById(id);
+        industry.setActive("0");
+        industryRepository.save(industry);
+    }
+
+    @Override
+    public List<IndustryResponseDto> findAll() {
+        return industryRepository.findAll().stream()
                 .filter(industry -> "1".equals(industry.getActive()))
-                .map(this::toDto);
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
-    @Transactional
-    public Optional<IndustryResponseDto> updateIndustry(Long id, IndustryRequestDto dto) {
-        return industryRepository.findById(id).map(existing -> {
-            existing.setIndustryType(getIndustryType(dto.getIdIndustryType()));
-            existing.setIdPlan(getPlan(dto.getIdPlan()));
-            existing.setIdLogin(getLogin(dto.getIdLogin()));
-            existing.setCnpj(dto.getCnpj());
-            existing.setIndustryName(dto.getIndustryName());
-            existing.setDescription(dto.getDescription());
-            existing.setContactMail(dto.getContactMail());
-            existing.setCep(dto.getCep());
-            existing.setCity(dto.getCity());
-            existing.setState(dto.getState());
-            existing.setImage(dto.getImage());
-            return toDto(industryRepository.save(existing));
-        });
+    @Override
+    public Industry findEntityById(Long id) {
+        return industryRepository.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Industry not found with ID: " + id));
     }
 
-    public boolean deleteIndustry(Long id) {
-        return industryRepository.findById(id).map(existing -> {
-            existing.setActive("0");
-            industryRepository.save(existing);
-            return true;
-        }).orElse(false);
+    public IndustryResponseDto loginIndustry(String username, String password) {
+        Boolean isAuthenticated = loginService.validateExistsLogin(username, password);
+        if (!isAuthenticated) {
+            throw new RuntimeException("Invalid username or password");
+        }
+
+        Industry industry = industryRepository.findIndustryByCnpj(username)
+                .orElseThrow(() -> new EntityNotFoundException("Industry not found with CNPJ: " + username));
+
+        return toResponse(industry);
     }
 
-    private IndustryType getIndustryType(Long id) {
-        return industryTypeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("IndustryType not found: " + id));
+    public IndustryResponseDto findIndustryByCnpj(String cnpj) {
+        return toResponse(industryRepository.findIndustryByCnpj(cnpj).orElseThrow(() ->
+                new EntityNotFoundException("Industry not found with CNPJ: " + cnpj)));
     }
 
-    private Plan getPlan(Long id) {
-        return planRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Plan not found: " + id));
+    private void mapRelationships(Industry industry, IndustryRequestDto dto) {
+        IndustryType industryType = industryTypeRepository.findById(dto.getIdIndustryType())
+                .orElseThrow(() -> new EntityNotFoundException("IndustryType not found: " + dto.getIdIndustryType()));
+        Plan plan = planService.findEntityById(dto.getIdPlan());
+        Login login = loginService.createLogin(dto.getCnpj(), dto.getPassword());
+
+        industry.setIndustryType(industryType);
+        industry.setPlan(plan);
+        industry.setLogin(login);
     }
 
-    private Login getLogin(Long id) {
-        return loginRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Login not found: " + id));
+    private Industry toIndustry(IndustryRequestDto requestDto) {
+        return industryMapper.toEntity(requestDto);
     }
 
-    private IndustryResponseDto toDto(Industry industry) {
-        IndustryResponseDto dto = new IndustryResponseDto();
-        dto.setIdIndustryType(industry.getIndustryType().getIdIndustryType());
-        dto.setIdPlan(industry.getIdPlan().getIdPlan());
-        dto.setIdLogin(industry.getIdLogin().getIdLogin());
-        dto.setCnpj(industry.getCnpj());
-        dto.setIndustryName(industry.getIndustryName());
-        dto.setDescription(industry.getDescription());
-        dto.setContactMail(industry.getContactMail());
-        dto.setCep(industry.getCep());
-        dto.setCity(industry.getCity());
-        dto.setState(industry.getState());
-        dto.setImage(industry.getImage());
-        return dto;
+    private IndustryResponseDto toResponse(Industry industry) {
+        return industryMapper.toResponse(industry);
     }
+
 }
