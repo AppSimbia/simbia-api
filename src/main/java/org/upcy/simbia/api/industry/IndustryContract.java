@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upcy.simbia.api.industry.input.IndustryRequestDto;
 import org.upcy.simbia.api.industry.output.IndustryResponseDto;
+import org.upcy.simbia.dataprovider.persistence.entity.IndustryType;
 
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/industries")
@@ -30,7 +32,7 @@ public interface IndustryContract {
             @ApiResponse(responseCode = "201", description = "Industry successfully login"),
             @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
-    @GetMapping
+    @PostMapping("/login")
     ResponseEntity<IndustryResponseDto> loginIndustry(@CNPJ @Param("username") String username, @Param("password") String password);
 
     @Operation(summary = "Get a specific industry by ID")
@@ -40,6 +42,14 @@ public interface IndustryContract {
     })
     @GetMapping("/{cnpj}")
     ResponseEntity<IndustryResponseDto> findIndustryByCnpj(@CNPJ @PathVariable String cnpj);
+
+    @Operation(summary = "Get all industries types")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Industry found"),
+            @ApiResponse(responseCode = "404", description = "Industry not found")
+    })
+    @GetMapping("/types")
+    ResponseEntity<List<IndustryType>> findAllIndustriesTypes();
 
     @Operation(summary = "Update an existing industry")
     @ApiResponses({

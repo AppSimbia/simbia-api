@@ -20,10 +20,6 @@ public class IndustryRequestDto {
     @NotNull(groups = OnCreate.class)
     private Long idIndustryType;
 
-    @Schema(example = "1", description = "ID of the associated plan")
-    @NotNull(groups = OnCreate.class)
-    private Long idPlan;
-
     @Schema(example = "1", description = "ID of the associated login")
     private Long idLogin;
 
@@ -32,7 +28,7 @@ public class IndustryRequestDto {
     @CNPJ(message = "Invalid CNPJ")
     private String cnpj;
 
-    @Schema(example = "a1b2c3d4-5678-90ab-cdef-1234567890ab", description = "Password UUID")
+    @Schema(example = "teste", description = "Password UUID")
     @NotNull(message = "Password UUID must not be null", groups = OnCreate.class)
     @Pattern(regexp = ".*\\S.*\\S.*", message = "Password UUID must be at least 2 non-blank characters")
     private String password;
