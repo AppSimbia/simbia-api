@@ -1,0 +1,44 @@
+package org.upcy.simbia.mapper;
+
+import org.upcy.simbia.api.post.input.PostRequestDto;
+import org.upcy.simbia.api.post.output.PostResponseDto;
+import org.upcy.simbia.dataprovider.persistence.entity.Post;
+
+import java.util.Date;
+
+public class PostMapper extends AbstractMapper<Post, PostRequestDto, PostResponseDto> {
+
+    @Override
+    public Post toEntity(PostRequestDto requestDto) {
+        return Post.builder()
+                .title(requestDto.getTitle())
+                .description(requestDto.getDescription())
+                .image(requestDto.getImage())
+                .quantity(requestDto.getQuantity())
+                .measureUnit(requestDto.getMeasureUnit())
+                .classification(requestDto.getClassification())
+                .status(requestDto.getStatus())
+                .publicationDate(new Date())
+                .active("1")
+                .build();
+    }
+
+    @Override
+    public PostResponseDto toResponse(Post entity) {
+        return PostResponseDto.builder()
+                .productCategory(entity.getIdProductCategory())
+                .industryName(entity.getIdIndustry().getIndustryName())
+                .industryCnpj(entity.getIdIndustry().getCnpj())
+                .industryImage(entity.getImage())
+                .employeeName(entity.getIdEmployee().getEmployeeName())
+                .title(entity.getTitle())
+                .description(entity.getDescription())
+                .quantity(entity.getQuantity())
+                .measureUnit(entity.getMeasureUnit())
+                .classification(entity.getClassification())
+                .status(entity.getStatus())
+                .image(entity.getImage())
+                .publicationDate(entity.getPublicationDate())
+                .build();
+    }
+}
