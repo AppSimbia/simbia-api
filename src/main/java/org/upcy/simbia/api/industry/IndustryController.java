@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.api.industry.input.IndustryRequestDto;
 import org.upcy.simbia.api.industry.output.IndustryResponseDto;
+import org.upcy.simbia.dataprovider.persistence.entity.IndustryType;
 import org.upcy.simbia.service.IndustryService;
+import org.upcy.simbia.service.IndustryTypeService;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -15,6 +18,7 @@ import java.util.Map;
 public class IndustryController implements IndustryContract {
 
     private final IndustryService industryService;
+    private final IndustryTypeService industryTypeService;
 
     @Override
     public ResponseEntity<IndustryResponseDto> save(IndustryRequestDto dto) {
@@ -29,6 +33,11 @@ public class IndustryController implements IndustryContract {
     @Override
     public ResponseEntity<IndustryResponseDto> findIndustryByCnpj(String cnpj) {
         return ResponseEntity.ok(industryService.findIndustryByCnpj(cnpj));
+    }
+
+    @Override
+    public ResponseEntity<List<IndustryType>> findAllIndustriesTypes() {
+        return ResponseEntity.ok(industryTypeService.findAll());
     }
 
     @Override

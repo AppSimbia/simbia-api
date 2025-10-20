@@ -13,9 +13,9 @@ import org.upcy.simbia.dataprovider.persistence.entity.IndustryType;
 import org.upcy.simbia.dataprovider.persistence.entity.Login;
 import org.upcy.simbia.dataprovider.persistence.entity.Plan;
 import org.upcy.simbia.dataprovider.persistence.repository.IndustryRepository;
-import org.upcy.simbia.dataprovider.persistence.repository.IndustryTypeRepository;
 import org.upcy.simbia.mapper.IndustryMapper;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,9 +27,9 @@ public class IndustryService implements CrudService<Industry, Long, IndustryRequ
     private static final IndustryMapper industryMapper = new IndustryMapper();
     private final LoginService loginService;
     private final PlanService planService;
+    private final IndustryTypeService industryTypeService;
     private final CnpjClient cnpjClient;
     private final IndustryRepository industryRepository;
-    private final IndustryTypeRepository industryTypeRepository;
 
     @Override
     public IndustryResponseDto save(IndustryRequestDto request) {
@@ -60,14 +60,38 @@ public class IndustryService implements CrudService<Industry, Long, IndustryRequ
         return toResponse(industryRepository.save(industry));
     }
 
-    public IndustryResponseDto update(String cnpj, Map<String, Object> map) throws JsonMappingException {
+    public IndustryResponseDto update(String cnpj, Map<String, Object> updates) throws JsonMappingException {
         Industry industry = industryRepository.findIndustryByCnpj(cnpj)
                 .filter(i -> "1".equals(i.getActive()))
                 .orElseThrow(EntityNotFoundException::new);
-        industryMapper.updateFromMap(industry, map);
+
+        updates.forEach((key, value) -> {
+            try {
+                switch (key) {
+                    case "plan" -> {
+                        Long planId = Long.valueOf(String.valueOf(value));
+                        industry.setPlan(planService.findEntityById(planId));
+                    }
+                    case "industryType" -> {
+                        Long industryTypeId = Long.valueOf(String.valueOf(value));
+                        industry.setIndustryType(industryTypeService.findEntityById(industryTypeId));
+                    }
+                    default -> {
+                        Field field = Industry.class.getDeclaredField(key);
+                        field.setAccessible(true);
+                        field.set(industry, value);
+                    }
+                }
+            } catch (NoSuchFieldException e) {
+                throw new IllegalArgumentException("Campo inválido: " + key, e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Erro ao atualizar o campo: " + key, e);
+            }
+        });
 
         return toResponse(industryRepository.save(industry));
     }
+
 
     @Override
     public void delete(Long id) {
@@ -108,9 +132,8 @@ public class IndustryService implements CrudService<Industry, Long, IndustryRequ
     }
 
     private void mapRelationships(Industry industry, IndustryRequestDto dto) {
-        IndustryType industryType = industryTypeRepository.findById(dto.getIdIndustryType())
-                .orElseThrow(() -> new EntityNotFoundException("IndustryType not found: " + dto.getIdIndustryType()));
-        Plan plan = planService.findEntityById(dto.getIdPlan());
+        IndustryType industryType = industryTypeService.findEntityById(dto.getIdIndustryType());
+        Plan plan = planService.findEntityById(1L);
         Login login = loginService.createLogin(dto.getCnpj(), dto.getPassword());
 
         industry.setIndustryType(industryType);
