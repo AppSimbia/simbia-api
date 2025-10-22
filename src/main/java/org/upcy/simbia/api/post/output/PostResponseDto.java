@@ -26,4 +26,5 @@ public class PostResponseDto {
     private String classification;
     private String image;
     private Date publicationDate;
+    private String status;
 }

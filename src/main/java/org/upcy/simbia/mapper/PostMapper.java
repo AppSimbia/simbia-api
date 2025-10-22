@@ -18,6 +18,7 @@ public class PostMapper extends AbstractMapper<Post, PostRequestDto, PostRespons
                 .measureUnit(requestDto.getMeasureUnit())
                 .classification(requestDto.getClassification())
                 .publicationDate(new Date())
+                .status("1")
                 .active("1")
                 .build();
     }

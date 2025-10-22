@@ -2,7 +2,8 @@ package org.upcy.simbia.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.upcy.simbia.api.solicitation.input.SolicitationRequestDto;
+import org.upcy.simbia.api.post.output.PostResponseDto;
+import org.upcy.simbia.api.solicitation.input.SolicitationBatchRequestDto;
 import org.upcy.simbia.api.solicitation.output.SolicitationData;
 import org.upcy.simbia.api.solicitation.output.SolicitationResponseDto;
 import org.upcy.simbia.dataprovider.persistence.entity.Industry;
@@ -20,10 +21,21 @@ public class SolicitationService {
     private final IndustryService industryService;
     private final PostService postService;
 
-    public List<SolicitationResponseDto> getSolicitations(List<SolicitationRequestDto> request) {
+
+    public List<SolicitationResponseDto> getSolicitations(SolicitationBatchRequestDto request) {
         List<SolicitationResponseDto> solicitations = new ArrayList<>();
 
-        request.forEach(solicitationRequest -> {
+        postService.findAllByIndustry(request.cnpjIndustry()).stream()
+                .map(this::toPost)
+
+                .forEach(post -> {
+                    SolicitationData solicitationData = getSolicitationData(post, null);
+                    SolicitationResponseDto solicitationResponse = toResponse(solicitationData);
+                    solicitations.add(solicitationResponse);
+                });
+
+
+        request.solicitations().forEach(solicitationRequest -> {
             Industry industry = solicitationRequest.getIdIndustry() == null ?
                     null : industryService.findEntityById(solicitationRequest.getIdIndustry());
             Post post = postService.findEntityById(solicitationRequest.getIdPost());
@@ -38,6 +50,19 @@ public class SolicitationService {
 
     private SolicitationData getSolicitationData(Post post, Industry industry) {
         return new SolicitationData(post, industry);
+    }
+
+    private Post toPost(PostResponseDto postResponseDto) {
+        return Post.builder()
+                .id(postResponseDto.getIdPost())
+                .title(postResponseDto.getTitle())
+                .idProductCategory(postResponseDto.getProductCategory())
+                .description(postResponseDto.getDescription())
+                .image(postResponseDto.getImage())
+                .measureUnit(postResponseDto.getMeasureUnit())
+                .classification(postResponseDto.getClassification())
+                .quantity(postResponseDto.getQuantity())
+                .build();
     }
 
     private SolicitationResponseDto toResponse(SolicitationData solicitationData) {

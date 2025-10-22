@@ -73,7 +73,7 @@ public class PostService implements CrudService<Post, Long, PostRequestDto, Post
 
     public List<PostResponseDto> findAllByIndustry(String cnpj) {
         return findAll().stream()
-                .filter(post -> post.getIndustryCnpj().equals(cnpj))
+                .filter(post -> post.getIndustryCnpj().equals(cnpj) && post.getStatus().equals("1"))
                 .collect(Collectors.toList());
     }
 

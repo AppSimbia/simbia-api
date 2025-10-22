@@ -5,6 +5,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.upcy.simbia.api.industry.input.IndustryRequestDto;
+import org.upcy.simbia.api.industry.input.LoginIndustryDto;
 import org.upcy.simbia.api.industry.output.IndustryResponseDto;
 import org.upcy.simbia.dataprovider.client.cnpj.CnpjClient;
 import org.upcy.simbia.dataprovider.client.cnpj.dto.WsData;
@@ -114,14 +115,14 @@ public class IndustryService implements CrudService<Industry, Long, IndustryRequ
                 new EntityNotFoundException("Industry not found with ID: " + id));
     }
 
-    public IndustryResponseDto loginIndustry(String username, String password) {
-        Boolean isAuthenticated = loginService.validateExistsLogin(username, password);
+    public IndustryResponseDto loginIndustry(LoginIndustryDto request) {
+        Boolean isAuthenticated = loginService.validateExistsLogin(request.getCnpj(), request.getPassword());
         if (!isAuthenticated) {
             throw new RuntimeException("Invalid username or password");
         }
 
-        Industry industry = industryRepository.findIndustryByCnpj(username)
-                .orElseThrow(() -> new EntityNotFoundException("Industry not found with CNPJ: " + username));
+        Industry industry = industryRepository.findIndustryByCnpj(request.getCnpj())
+                .orElseThrow(() -> new EntityNotFoundException("Industry not found with CNPJ: " + request.getCnpj()));
 
         return toResponse(industry);
     }
