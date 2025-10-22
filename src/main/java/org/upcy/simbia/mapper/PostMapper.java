@@ -17,7 +17,6 @@ public class PostMapper extends AbstractMapper<Post, PostRequestDto, PostRespons
                 .quantity(requestDto.getQuantity())
                 .measureUnit(requestDto.getMeasureUnit())
                 .classification(requestDto.getClassification())
-                .status(requestDto.getStatus())
                 .publicationDate(new Date())
                 .active("1")
                 .build();
@@ -26,6 +25,7 @@ public class PostMapper extends AbstractMapper<Post, PostRequestDto, PostRespons
     @Override
     public PostResponseDto toResponse(Post entity) {
         return PostResponseDto.builder()
+                .idPost(entity.getId())
                 .productCategory(entity.getIdProductCategory())
                 .industryName(entity.getIdIndustry().getIndustryName())
                 .industryCnpj(entity.getIdIndustry().getCnpj())
@@ -36,7 +36,6 @@ public class PostMapper extends AbstractMapper<Post, PostRequestDto, PostRespons
                 .quantity(entity.getQuantity())
                 .measureUnit(entity.getMeasureUnit())
                 .classification(entity.getClassification())
-                .status(entity.getStatus())
                 .image(entity.getImage())
                 .publicationDate(entity.getPublicationDate())
                 .build();

@@ -46,9 +46,6 @@ public class Post {
     @Column(name = "cclassification")
     private String classification;
 
-    @Column(name = "cstatus")
-    private String status;
-
     @Column(name = "cimage")
     private String image;
 

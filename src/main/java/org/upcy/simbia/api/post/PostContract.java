@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upcy.simbia.api.post.input.PostRequestDto;
 import org.upcy.simbia.api.post.output.PostResponseDto;
+import org.upcy.simbia.dataprovider.persistence.entity.ProductCategory;
 
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,13 @@ public interface PostContract {
     })
     @GetMapping("/list/{cnpj}")
     ResponseEntity<List<PostResponseDto>> findAllByIndustry(@CNPJ @PathVariable("cnpj") String cnpj);
+
+    @Operation(summary = "List all products category")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "List of posts successfully returned")
+    })
+    @GetMapping("/category/list")
+    ResponseEntity<List<ProductCategory>> findAllProductCategory();
 
     @Operation(summary = "Get a post by ID")
     @ApiResponses({

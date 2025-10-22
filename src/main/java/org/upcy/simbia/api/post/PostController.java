@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.api.post.input.PostRequestDto;
 import org.upcy.simbia.api.post.output.PostResponseDto;
+import org.upcy.simbia.dataprovider.persistence.entity.ProductCategory;
 import org.upcy.simbia.service.PostService;
 
 import java.util.List;
@@ -25,6 +26,11 @@ public class PostController implements PostContract {
     @Override
     public ResponseEntity<List<PostResponseDto>> findAllByIndustry(String cnpj) {
         return ResponseEntity.ok(postService.findAllByIndustry(cnpj));
+    }
+
+    @Override
+    public ResponseEntity<List<ProductCategory>> findAllProductCategory() {
+        return ResponseEntity.ok(postService.findAllProductCategory());
     }
 
     @Override
