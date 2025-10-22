@@ -77,6 +77,10 @@ public class PostService implements CrudService<Post, Long, PostRequestDto, Post
                 .collect(Collectors.toList());
     }
 
+    public List<ProductCategory> findAllProductCategory() {
+        return productCategoryRepository.findAll();
+    }
+
     private void mapRelationships(Post post, PostRequestDto dto) {
         ProductCategory productCategory = productCategoryRepository.findById(dto.getIdProductCategory())
                 .orElseThrow(() -> new EntityNotFoundException("IndustryType not found: " + dto.getIdProductCategory()));

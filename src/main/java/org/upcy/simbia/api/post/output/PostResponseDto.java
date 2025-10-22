@@ -13,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class PostResponseDto {
+    private Long idPost;
     private ProductCategory productCategory;
     private String industryName;
     private String industryImage;
@@ -23,7 +24,6 @@ public class PostResponseDto {
     private Integer quantity;
     private String measureUnit;
     private String classification;
-    private String status;
     private String image;
     private Date publicationDate;
 }

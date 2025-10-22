@@ -6,8 +6,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.upcy.simbia.validation.OnCreate;
 
-import java.util.Date;
-
 @Data
 public class PostRequestDto {
 
@@ -45,13 +43,7 @@ public class PostRequestDto {
     @NotNull(message = "Classification must not be null", groups = OnCreate.class)
     private String classification;
 
-    @Schema(example = "1", description = "Status available")
-    @NotNull(message = "Status must not be null", groups = OnCreate.class)
-    private String status;
-
     @Schema(example = "base64-image-data", description = "Base64 encoded image")
     private String image;
 
-    @Schema(example = "2025-09-16", description = "Date when the post was published")
-    private Date publicationDate;
 }
