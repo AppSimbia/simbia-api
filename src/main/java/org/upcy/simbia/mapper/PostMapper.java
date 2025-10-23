@@ -15,6 +15,7 @@ public class PostMapper extends AbstractMapper<Post, PostRequestDto, PostRespons
                 .description(requestDto.getDescription())
                 .image(requestDto.getImage())
                 .quantity(requestDto.getQuantity())
+                .price(requestDto.getPrice())
                 .measureUnit(requestDto.getMeasureUnit())
                 .classification(requestDto.getClassification())
                 .publicationDate(new Date())
@@ -35,10 +36,12 @@ public class PostMapper extends AbstractMapper<Post, PostRequestDto, PostRespons
                 .title(entity.getTitle())
                 .description(entity.getDescription())
                 .quantity(entity.getQuantity())
+                .price(entity.getPrice())
                 .measureUnit(entity.getMeasureUnit())
                 .classification(entity.getClassification())
                 .image(entity.getImage())
                 .publicationDate(entity.getPublicationDate())
+                .status(entity.getStatus())
                 .build();
     }
 }

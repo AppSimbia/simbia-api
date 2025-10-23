@@ -22,6 +22,7 @@ public class PostResponseDto {
     private String title;
     private String description;
     private Integer quantity;
+    private Double price;
     private String measureUnit;
     private String classification;
     private String image;

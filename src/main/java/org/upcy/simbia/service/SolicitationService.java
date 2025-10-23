@@ -1,8 +1,8 @@
 package org.upcy.simbia.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.upcy.simbia.api.post.output.PostResponseDto;
 import org.upcy.simbia.api.solicitation.input.SolicitationBatchRequestDto;
 import org.upcy.simbia.api.solicitation.output.SolicitationData;
 import org.upcy.simbia.api.solicitation.output.SolicitationResponseDto;
@@ -21,48 +21,27 @@ public class SolicitationService {
     private final IndustryService industryService;
     private final PostService postService;
 
-
+    @Cacheable("solicitations")
     public List<SolicitationResponseDto> getSolicitations(SolicitationBatchRequestDto request) {
         List<SolicitationResponseDto> solicitations = new ArrayList<>();
 
-        postService.findAllByIndustry(request.cnpjIndustry()).stream()
-                .map(this::toPost)
-
-                .forEach(post -> {
-                    SolicitationData solicitationData = getSolicitationData(post, null);
-                    SolicitationResponseDto solicitationResponse = toResponse(solicitationData);
-                    solicitations.add(solicitationResponse);
-                });
-
+        postService.findAllSolicitationsByIndustry(request.cnpjIndustry()).forEach(post -> {
+            SolicitationData solicitationData = new SolicitationData(post, null);
+            SolicitationResponseDto solicitationResponse = toResponse(solicitationData);
+            solicitations.add(solicitationResponse);
+        });
 
         request.solicitations().forEach(solicitationRequest -> {
             Industry industry = solicitationRequest.getIdIndustry() == null ?
                     null : industryService.findEntityById(solicitationRequest.getIdIndustry());
             Post post = postService.findEntityById(solicitationRequest.getIdPost());
 
-            SolicitationData solicitationData = getSolicitationData(post, industry);
+            SolicitationData solicitationData = new SolicitationData(post, industry);
             SolicitationResponseDto solicitationResponse = toResponse(solicitationData);
             solicitations.add(solicitationResponse);
         });
 
         return solicitations;
-    }
-
-    private SolicitationData getSolicitationData(Post post, Industry industry) {
-        return new SolicitationData(post, industry);
-    }
-
-    private Post toPost(PostResponseDto postResponseDto) {
-        return Post.builder()
-                .id(postResponseDto.getIdPost())
-                .title(postResponseDto.getTitle())
-                .idProductCategory(postResponseDto.getProductCategory())
-                .description(postResponseDto.getDescription())
-                .image(postResponseDto.getImage())
-                .measureUnit(postResponseDto.getMeasureUnit())
-                .classification(postResponseDto.getClassification())
-                .quantity(postResponseDto.getQuantity())
-                .build();
     }
 
     private SolicitationResponseDto toResponse(SolicitationData solicitationData) {

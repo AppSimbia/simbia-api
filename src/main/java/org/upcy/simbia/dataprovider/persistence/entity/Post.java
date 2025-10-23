@@ -40,6 +40,9 @@ public class Post {
     @Column(name = "nquantity")
     private int quantity;
 
+    @Column(name = "nprice")
+    private Double price;
+
     @Column(name = "cmeasureunit")
     private String measureUnit;
 

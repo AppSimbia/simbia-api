@@ -16,7 +16,6 @@ import org.upcy.simbia.mapper.PostMapper;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,11 +57,9 @@ public class PostService implements CrudService<Post, Long, PostRequestDto, Post
 
     @Override
     public List<PostResponseDto> findAll() {
-        return postRepository.findAll()
-                .stream()
-                .filter(p -> "1".equals(p.getActive()))
+        return postRepository.findAll().stream()
                 .map(this::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -72,9 +69,13 @@ public class PostService implements CrudService<Post, Long, PostRequestDto, Post
     }
 
     public List<PostResponseDto> findAllByIndustry(String cnpj) {
-        return findAll().stream()
-                .filter(post -> post.getIndustryCnpj().equals(cnpj) && post.getStatus().equals("1"))
-                .collect(Collectors.toList());
+        return postRepository.findAllByIndustry(cnpj, "2").stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<Post> findAllSolicitationsByIndustry(String cnpj) {
+        return postRepository.findAllByIndustry(cnpj, "1");
     }
 
     public List<ProductCategory> findAllProductCategory() {
