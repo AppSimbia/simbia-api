@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.upcy.simbia.api.industry.input.IndustryRequestDto;
+import org.upcy.simbia.api.industry.input.LoginIndustryDto;
 import org.upcy.simbia.api.industry.output.IndustryResponseDto;
 import org.upcy.simbia.dataprovider.persistence.entity.IndustryType;
 import org.upcy.simbia.service.IndustryService;
@@ -26,8 +27,8 @@ public class IndustryController implements IndustryContract {
     }
 
     @Override
-    public ResponseEntity<IndustryResponseDto> loginIndustry(String username, String password) {
-        return ResponseEntity.status(200).body(industryService.loginIndustry(username, password));
+    public ResponseEntity<IndustryResponseDto> loginIndustry(LoginIndustryDto request) {
+        return ResponseEntity.status(200).body(industryService.loginIndustry(request));
     }
 
     @Override

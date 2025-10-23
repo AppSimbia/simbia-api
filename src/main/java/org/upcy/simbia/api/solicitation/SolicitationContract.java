@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.upcy.simbia.api.solicitation.input.SolicitationBatchRequestDto;
 import org.upcy.simbia.api.solicitation.input.SolicitationRequestDto;
 import org.upcy.simbia.api.solicitation.output.SolicitationResponseDto;
 
@@ -20,6 +21,6 @@ public interface SolicitationContract {
             @ApiResponse(responseCode = "404", description = "Solicitation info not found")
     })
     @PostMapping
-    List<SolicitationResponseDto> getInfoSolicitations(@RequestBody List<SolicitationRequestDto> request);
+    List<SolicitationResponseDto> getInfoSolicitations(@RequestBody SolicitationBatchRequestDto request);
 
 }

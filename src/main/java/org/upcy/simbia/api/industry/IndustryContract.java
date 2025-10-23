@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upcy.simbia.api.industry.input.IndustryRequestDto;
+import org.upcy.simbia.api.industry.input.LoginIndustryDto;
 import org.upcy.simbia.api.industry.output.IndustryResponseDto;
 import org.upcy.simbia.dataprovider.persistence.entity.IndustryType;
 
@@ -33,7 +34,7 @@ public interface IndustryContract {
             @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PostMapping("/login")
-    ResponseEntity<IndustryResponseDto> loginIndustry(@CNPJ @Param("username") String username, @Param("password") String password);
+    ResponseEntity<IndustryResponseDto> loginIndustry(@Valid @RequestBody LoginIndustryDto request);
 
     @Operation(summary = "Get a specific industry by ID")
     @ApiResponses({

@@ -22,6 +22,5 @@ public class SolicitationResponseDto {
     private String cCategoryName;
     private String cClassification;
     private String cDescription;
-    private String cActive;
 
 }

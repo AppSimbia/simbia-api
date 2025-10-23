@@ -35,7 +35,11 @@ public class PostRequestDto {
     @NotNull(message = "Quantity must not be null", groups = OnCreate.class)
     private Integer quantity;
 
-    @Schema(example = "kg", description = "Measurement unit for the quantity")
+    @Schema(example = "100.5", description = "Price available")
+    @NotNull(message = "Price must not be null", groups = OnCreate.class)
+    private Double price;
+
+    @Schema(example = "1", description = "Measurement unit for the quantity")
     @NotNull(message = "Measure unit must not be null", groups = OnCreate.class)
     private String measureUnit;
 
