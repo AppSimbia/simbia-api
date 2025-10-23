@@ -14,7 +14,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT * FROM post p " +
             "JOIN industry i ON p.idindustry = i.idindustry " +
-            "WHERE i.cnpj = :cnpj AND p.cstatus = :status", nativeQuery = true)
+            "WHERE i.ccnpj = :cnpj AND p.cstatus = :status", nativeQuery = true)
     List<Post> findAllByIndustry(@Param("cnpj") String cnpj, @Param("status") String status);
 
     @Override
