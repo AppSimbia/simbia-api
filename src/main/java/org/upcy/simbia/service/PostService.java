@@ -81,7 +81,7 @@ public class PostService implements CrudService<Post, Long, PostRequestDto, Post
         return postRepository.findAllByIndustry(cnpj, "1");
     }
 
-    @Cacheable("categorys")
+    @Cacheable("categories")
     public List<ProductCategory> findAllProductCategory() {
         return productCategoryRepository.findAll();
     }
