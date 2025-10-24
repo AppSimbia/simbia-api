@@ -2,7 +2,9 @@ package org.upcy.simbia.service;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.upcy.simbia.api.industry.input.IndustryRequestDto;
 import org.upcy.simbia.api.industry.input.LoginIndustryDto;
@@ -14,6 +16,8 @@ import org.upcy.simbia.dataprovider.persistence.entity.IndustryType;
 import org.upcy.simbia.dataprovider.persistence.entity.Login;
 import org.upcy.simbia.dataprovider.persistence.entity.Plan;
 import org.upcy.simbia.dataprovider.persistence.repository.IndustryRepository;
+import org.upcy.simbia.exception.InvalidEmailDomainException;
+import org.upcy.simbia.exception.InvalidLoginException;
 import org.upcy.simbia.mapper.IndustryMapper;
 
 import java.lang.reflect.Field;
@@ -38,7 +42,7 @@ public class IndustryService implements CrudService<Industry, Long, IndustryRequ
 
         WsData wsData = cnpjClient.getDomainByCnpj(request.getCnpj());
         if (wsData.getEmails().stream().noneMatch(email -> request.getContactMail().endsWith(email.getDomain()))){
-            throw new RuntimeException("Contact email domain does not match any of the CNPJ email domains");
+            throw new InvalidEmailDomainException("Contact email domain does not match any of the CNPJ email domains");
         }
 
         mapRelationships(industry, request);
@@ -46,6 +50,7 @@ public class IndustryService implements CrudService<Industry, Long, IndustryRequ
         return toResponse(industryRepository.save(industry));
     }
 
+    @Cacheable("industryId")
     @Override
     public IndustryResponseDto findById(Long id) {
         return toResponse(findEntityById(id));
@@ -61,6 +66,7 @@ public class IndustryService implements CrudService<Industry, Long, IndustryRequ
         return toResponse(industryRepository.save(industry));
     }
 
+    @Transactional
     public IndustryResponseDto update(String cnpj, Map<String, Object> updates) throws JsonMappingException {
         Industry industry = industryRepository.findIndustryByCnpj(cnpj)
                 .filter(i -> "1".equals(i.getActive()))
@@ -118,7 +124,7 @@ public class IndustryService implements CrudService<Industry, Long, IndustryRequ
     public IndustryResponseDto loginIndustry(LoginIndustryDto request) {
         Boolean isAuthenticated = loginService.validateExistsLogin(request.getCnpj(), request.getPassword());
         if (!isAuthenticated) {
-            throw new RuntimeException("Invalid username or password");
+            throw new InvalidLoginException("Invalid username or password");
         }
 
         Industry industry = industryRepository.findIndustryByCnpj(request.getCnpj())
@@ -127,6 +133,7 @@ public class IndustryService implements CrudService<Industry, Long, IndustryRequ
         return toResponse(industry);
     }
 
+    @Cacheable("industryCnpj")
     public IndustryResponseDto findIndustryByCnpj(String cnpj) {
         return toResponse(industryRepository.findIndustryByCnpj(cnpj).orElseThrow(() ->
                 new EntityNotFoundException("Industry not found with CNPJ: " + cnpj)));

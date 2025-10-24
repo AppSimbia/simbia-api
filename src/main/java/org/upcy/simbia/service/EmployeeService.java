@@ -1,6 +1,7 @@
 package org.upcy.simbia.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.upcy.simbia.api.employee.input.EmployeeRequestDto;
@@ -28,6 +29,7 @@ public class EmployeeService {
         return toResponse(employee);
     }
 
+    @Transactional
     public EmployeeResponseDto update(Long id, EmployeeRequestDto dto) {
         Employee employee = findEntityById(id);
 
