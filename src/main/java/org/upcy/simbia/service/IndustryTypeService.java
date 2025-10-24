@@ -2,6 +2,7 @@ package org.upcy.simbia.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.upcy.simbia.dataprovider.persistence.entity.IndustryType;
 import org.upcy.simbia.dataprovider.persistence.repository.IndustryTypeRepository;
@@ -14,6 +15,7 @@ public class IndustryTypeService {
 
     private final IndustryTypeRepository industryTypeRepository;
 
+    @Cacheable("types")
     public List<IndustryType> findAll(){
         return industryTypeRepository.findAll();
     }
