@@ -12,9 +12,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "SELECT FN_TableIdGenerator('post', 'idpost')", nativeQuery = true)
     Long generateId();
 
-    @Query(value = "SELECT * FROM post p " +
-            "JOIN industry i ON p.idindustry = i.idindustry " +
-            "WHERE i.ccnpj = :cnpj AND p.cstatus = :status", nativeQuery = true)
+    @Query(value = "select p.* from post p " +
+            "join industry i on p.idindustry = i.idindustry " +
+            "where p.cactive = '1' and p.cstatus = :status and i.ccnpj = :cnpj", nativeQuery = true)
     List<Post> findAllByIndustry(@Param("cnpj") String cnpj, @Param("status") String status);
 
     @Override
