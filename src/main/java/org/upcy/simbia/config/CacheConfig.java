@@ -16,14 +16,17 @@ import java.util.concurrent.TimeUnit;
 @EnableCaching
 public class CacheConfig {
 
-    String[] cachesNames = {
-            "posts",
-            "postsId",
+    String[] cachesNamesImmutable = {
             "categories",
-            "solicitations",
             "plans",
             "planId",
-            "types",
+            "types"
+    };
+
+    String[] cachesNames = {
+            "postsId",
+            "posts",
+            "solicitations",
             "industryId",
             "industryCnpj"
     };
@@ -32,6 +35,15 @@ public class CacheConfig {
     public CacheManager cacheManager() {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         List<CaffeineCache> caches = new ArrayList<>();
+
+        for (String cacheName : cachesNamesImmutable) {
+            CaffeineCache cache = new CaffeineCache(cacheName,
+                    Caffeine.newBuilder()
+                            .maximumSize(15)
+                            .expireAfterWrite(3, TimeUnit.HOURS)
+                            .build());
+            caches.add(cache);
+        }
 
         for (String cacheName : cachesNames) {
             CaffeineCache cache = new CaffeineCache(cacheName,
