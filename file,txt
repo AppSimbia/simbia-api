@@ -1,6 +1,0 @@
-Adicionar @Transactional em métodos save, update, delete de IndustryService, PostService, EmployeeService, SolicitationService (apenas onde houver múltiplas operações de escrita).
-Substituir throws de RuntimeException por exceções customizadas simples e criar um @ControllerAdvice para mapear para status HTTP.
-Trocar mappers estáticos por injeção (transformá-los em @Components) — ou, se preferir, migrar para MapStruct (maior mudança).
-Adicionar logs simples (SLF4J) nos métodos principais.
-Alterar findAll().stream().filter(...) para chamadas de repositório específicas quando existir query simples (ex.: findAllByIndustryCnpjAndStatus).
-Criar constantes para "1"/"0" e mover para uma classe EntityStatus ou para a própria entidade.

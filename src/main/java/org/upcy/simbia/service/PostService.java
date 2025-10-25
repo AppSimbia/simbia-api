@@ -3,6 +3,7 @@ package org.upcy.simbia.service;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.upcy.simbia.api.post.input.PostRequestDto;
 import org.upcy.simbia.api.post.output.PostResponseDto;
@@ -35,6 +36,7 @@ public class PostService implements CrudService<Post, Long, PostRequestDto, Post
         return toResponse(postRepository.save(post));
     }
 
+    @Cacheable("postsId")
     @Override
     public PostResponseDto findById(Long id) {
         return toResponse(findEntityById(id));
@@ -68,6 +70,7 @@ public class PostService implements CrudService<Post, Long, PostRequestDto, Post
                 new EntityNotFoundException("Post not found"));
     }
 
+    @Cacheable("posts")
     public List<PostResponseDto> findAllByIndustry(String cnpj) {
         return postRepository.findAllByIndustry(cnpj, "2").stream()
                 .map(this::toResponse)
@@ -78,6 +81,7 @@ public class PostService implements CrudService<Post, Long, PostRequestDto, Post
         return postRepository.findAllByIndustry(cnpj, "1");
     }
 
+    @Cacheable("categories")
     public List<ProductCategory> findAllProductCategory() {
         return productCategoryRepository.findAll();
     }
