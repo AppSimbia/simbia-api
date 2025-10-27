@@ -31,7 +31,7 @@ public class PostMapper extends AbstractMapper<Post, PostRequestDto, PostRespons
                 .productCategory(entity.getIdProductCategory())
                 .industryName(entity.getIdIndustry().getIndustryName())
                 .industryCnpj(entity.getIdIndustry().getCnpj())
-                .industryImage(entity.getImage())
+                .industryImage(entity.getIdIndustry().getImage())
                 .employeeName(entity.getIdEmployee().getEmployeeName())
                 .title(entity.getTitle())
                 .description(entity.getDescription())

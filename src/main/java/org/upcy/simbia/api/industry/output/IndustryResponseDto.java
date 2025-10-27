@@ -12,6 +12,7 @@ import org.upcy.simbia.dataprovider.persistence.entity.Plan;
 @NoArgsConstructor
 @Builder
 public class IndustryResponseDto {
+    private Long idIndustry;
     private IndustryType industryType;
     private Plan plan;
     private LoginResponseDto login;

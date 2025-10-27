@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.upcy.simbia.api.employee.input.EmployeeRequestDto;
 import org.upcy.simbia.api.employee.output.EmployeeResponseDto;
 
+import java.util.Map;
+
 @RequestMapping("/employees")
 public interface EmployeeContract {
 
@@ -20,13 +22,21 @@ public interface EmployeeContract {
     @PostMapping
     ResponseEntity<EmployeeResponseDto> createEmployee(@Valid @RequestBody EmployeeRequestDto dto);
 
+    @Operation(summary = "Get a specific employee by ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Employee found"),
+            @ApiResponse(responseCode = "404", description = "Employee not found")
+    })
+    @GetMapping("/{id}")
+    ResponseEntity<EmployeeResponseDto> findEmployeeById(@PathVariable Long id);
+
     @Operation(summary = "Update a employee")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Employee updated successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid data provided")
     })
     @PutMapping("/{id}")
-    ResponseEntity<EmployeeResponseDto> updateEmployee(@PathVariable("id") Long id, @Valid @RequestBody EmployeeRequestDto dto);
+    ResponseEntity<EmployeeResponseDto> updateEmployee(@PathVariable("id") Long id, @RequestBody Map<String, Object> dto);
 
     @Operation(summary = "Delete an employee by ID")
     @ApiResponses({
