@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +15,6 @@ public class LoginResponseDto {
 
     private Long id;
     private String username;
-    private String pwdUUID;
+    private UUID pwdUUID;
 
 }

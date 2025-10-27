@@ -52,6 +52,12 @@
         @Column(name = "cstate")
         private String state;
 
+        @Column(name = "nlatitude")
+        private Double latitude;
+
+        @Column(name = "nlongitude")
+        private Double longitude;
+
         @Column(name = "cimage")
         private String image;
 

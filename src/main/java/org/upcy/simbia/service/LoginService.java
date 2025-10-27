@@ -1,5 +1,6 @@
 package org.upcy.simbia.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.upcy.simbia.dataprovider.persistence.entity.Login;
@@ -14,17 +15,14 @@ public class LoginService {
 
     private final LoginRepository loginRepository;
 
+    @Transactional
     public Login createLogin(String userName, String password) {
-        if (validateExistsLogin(userName)) {
+        if (validateExistsLogin(userName, password)) {
             throw new LoginAlreadyExistsException(userName);
         }
-        final String pwdUUID = java.util.UUID.randomUUID().toString();
-        final String pwdHash = loginRepository.generateHashSenha(userName, password, pwdUUID);
         Login login = Login.builder()
                 .id(loginRepository.generateId())
                 .userName(userName)
-                .pwdUUID(pwdUUID)
-                .pwdHash(pwdHash)
                 .isFirstLogin("1")
                 .lastChange(LocalDateTime.now().minusDays(1L))
                 .active("1")
@@ -32,18 +30,13 @@ public class LoginService {
         return loginRepository.save(login);
     }
 
-    public Boolean validateExistsLogin(String userName) {
-        return loginRepository.findByUserName(userName).isPresent();
+    @Transactional
+    public void updatePassword(String username, String newPassword) {
+        loginRepository.updateUserPassword(username, newPassword);
     }
 
     public Boolean validateExistsLogin(String userName, String password) {
-        Login login = loginRepository.findByUserName(userName).orElse(null);
-        if (login == null) {
-            return false;
-        } else {
-            String generatedHash = loginRepository.generateHashSenha(userName, password, login.getPwdUUID());
-            return generatedHash.equals(login.getPwdHash());
-        }
+        return loginRepository.validateUser(userName, password);
     }
 
 }
