@@ -7,6 +7,8 @@ import org.upcy.simbia.api.employee.input.EmployeeRequestDto;
 import org.upcy.simbia.api.employee.output.EmployeeResponseDto;
 import org.upcy.simbia.service.EmployeeService;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 public class EmployeeController implements EmployeeContract {
@@ -19,8 +21,13 @@ public class EmployeeController implements EmployeeContract {
     }
 
     @Override
-    public ResponseEntity<EmployeeResponseDto> updateEmployee(Long id, EmployeeRequestDto dto) {
-        return ResponseEntity.status(200).body(employeeService.update(id, dto));
+    public ResponseEntity<EmployeeResponseDto> findEmployeeById(Long id) {
+        return ResponseEntity.status(200).body(employeeService.findById(id));
+    }
+
+    @Override
+    public ResponseEntity<EmployeeResponseDto> updateEmployee(Long id, Map<String, Object> map) {
+        return ResponseEntity.status(200).body(employeeService.update(id, map));
     }
 
     @Override

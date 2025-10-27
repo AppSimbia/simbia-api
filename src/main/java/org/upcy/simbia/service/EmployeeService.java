@@ -10,9 +10,12 @@ import org.upcy.simbia.dataprovider.persistence.entity.Employee;
 import org.upcy.simbia.dataprovider.persistence.repository.EmployeeRepository;
 import org.upcy.simbia.mapper.EmployeeMapper;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
-public class EmployeeService {
+public class EmployeeService implements CrudService<Employee, Long, EmployeeRequestDto, EmployeeResponseDto> {
 
     private static final EmployeeMapper employeeMapper = new EmployeeMapper();
     private final EmployeeRepository employeeRepository;
@@ -29,11 +32,16 @@ public class EmployeeService {
         return toResponse(employee);
     }
 
+    @Override
+    public EmployeeResponseDto findById(Long id) {
+        return toResponse(findEntityById(id));
+    }
+
     @Transactional
-    public EmployeeResponseDto update(Long id, EmployeeRequestDto dto) {
+    public EmployeeResponseDto update(Long id, Map<String, Object> map) {
         Employee employee = findEntityById(id);
 
-        employee.setEmployeeName(dto.getEmployeeName());
+        employee.setEmployeeName(map.get("employeeName").toString());
         employeeRepository.save(employee);
         return toResponse(employee);
     }
@@ -43,6 +51,11 @@ public class EmployeeService {
 
         employee.setActive("0");
         employeeRepository.save(employee);
+    }
+
+    @Override
+    public List<EmployeeResponseDto> findAll() {
+        return List.of();
     }
 
     public Employee findEntityById(Long id) {

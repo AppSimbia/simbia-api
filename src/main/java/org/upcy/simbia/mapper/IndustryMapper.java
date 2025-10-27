@@ -24,6 +24,7 @@ public class IndustryMapper extends AbstractMapper<Industry, IndustryRequestDto,
 
     public IndustryResponseDto toResponse(Industry model) {
         return IndustryResponseDto.builder()
+                .idIndustry(model.getId())
                 .cnpj(model.getCnpj())
                 .industryType(model.getIndustryType())
                 .plan(model.getPlan())
