@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -26,8 +27,8 @@ public class Login {
     @Column(name = "cusername")
     private String userName;
 
-    @Column(name = "cpwduuid")
-    private String pwdUUID ;
+    @Column(name = "cpwduuid", insertable = false)
+    private UUID pwdUUID;
 
     @Column(name = "cpwdhash")
     private String pwdHash;

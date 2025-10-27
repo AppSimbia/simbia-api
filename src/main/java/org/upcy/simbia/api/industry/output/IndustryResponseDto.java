@@ -22,6 +22,8 @@ public class IndustryResponseDto {
     private String contactMail;
     private String cep;
     private String city;
+    private Double latitude;
+    private Double longitude;
     private String state;
     private String image;
 }

@@ -16,6 +16,8 @@ public class IndustryMapper extends AbstractMapper<Industry, IndustryRequestDto,
                 .contactMail(requestDto.getContactMail())
                 .city(requestDto.getCity())
                 .cep(requestDto.getCep())
+                .latitude(requestDto.getLatitude())
+                .longitude(requestDto.getLongitude())
                 .state(requestDto.getState())
                 .image(requestDto.getImage())
                 .active("1")
@@ -34,6 +36,8 @@ public class IndustryMapper extends AbstractMapper<Industry, IndustryRequestDto,
                 .contactMail(model.getContactMail())
                 .city(model.getCity())
                 .cep(model.getCep())
+                .latitude(model.getLatitude())
+                .longitude(model.getLongitude())
                 .state(model.getState())
                 .image(model.getImage())
                 .build();

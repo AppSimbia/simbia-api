@@ -37,6 +37,11 @@ public class IndustryController implements IndustryContract {
     }
 
     @Override
+    public ResponseEntity<IndustryResponseDto> findIndustryById(Long id) {
+        return ResponseEntity.ok(industryService.findIndustryById(id));
+    }
+
+    @Override
     public ResponseEntity<List<IndustryType>> findAllIndustriesTypes() {
         return ResponseEntity.ok(industryTypeService.findAll());
     }

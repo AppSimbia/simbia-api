@@ -6,8 +6,6 @@ import org.upcy.simbia.dataprovider.persistence.entity.Employee;
 
 public class EmployeeMapper extends AbstractMapper<Employee, EmployeeRequestDto, EmployeeResponseDto> {
 
-    private static final IndustryMapper industryMapper = new IndustryMapper();
-
     @Override
     public Employee toEntity(EmployeeRequestDto requestDto) {
         return null;
@@ -16,8 +14,8 @@ public class EmployeeMapper extends AbstractMapper<Employee, EmployeeRequestDto,
     @Override
     public EmployeeResponseDto toResponse(Employee entity) {
         return EmployeeResponseDto.builder()
+                .idEmployee(entity.getIdEmployee())
                 .employeeName(entity.getEmployeeName())
-                .industry(industryMapper.toResponse(entity.getIndustry()))
                 .build();
     }
 }

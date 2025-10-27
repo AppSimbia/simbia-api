@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.hibernate.validator.constraints.br.CNPJ;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upcy.simbia.api.industry.input.IndustryRequestDto;
@@ -41,7 +40,15 @@ public interface IndustryContract {
             @ApiResponse(responseCode = "200", description = "Industry found"),
             @ApiResponse(responseCode = "404", description = "Industry not found")
     })
-    @GetMapping("/{cnpj}")
+    @GetMapping("/id/{id}")
+    ResponseEntity<IndustryResponseDto> findIndustryById(@PathVariable Long id);
+
+    @Operation(summary = "Get a specific industry by CNPJ")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Industry found"),
+            @ApiResponse(responseCode = "404", description = "Industry not found")
+    })
+    @GetMapping("/cnpj/{cnpj}")
     ResponseEntity<IndustryResponseDto> findIndustryByCnpj(@CNPJ @PathVariable String cnpj);
 
     @Operation(summary = "Get all industries types")
