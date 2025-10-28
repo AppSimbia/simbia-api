@@ -34,6 +34,12 @@ public class PostController implements PostContract {
     }
 
     @Override
+    public ResponseEntity<List<PostResponseDto>> findAllIndustryByEmployee(Long id) {
+        return ResponseEntity.ok(postService.findAllIndustryByEmployee(id));
+    }
+
+
+    @Override
     public ResponseEntity<List<ProductCategory>> findAllProductCategory() {
         return ResponseEntity.ok(postService.findAllProductCategory());
     }

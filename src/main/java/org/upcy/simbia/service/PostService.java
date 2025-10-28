@@ -84,6 +84,13 @@ public class PostService implements CrudService<Post, Long, PostRequestDto, Post
                 .toList();
     }
 
+    @Cacheable("postsEmployee")
+    public List<PostResponseDto> findAllIndustryByEmployee(Long id) {
+        return postRepository.findAllIndustryByEmployee(id, "2").stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public List<Post> findAllSolicitationsByIndustry(String cnpj) {
         return postRepository.findAllByIndustry(cnpj, "1");
     }
