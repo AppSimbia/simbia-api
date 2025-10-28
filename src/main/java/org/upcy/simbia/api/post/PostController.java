@@ -29,6 +29,11 @@ public class PostController implements PostContract {
     }
 
     @Override
+    public ResponseEntity<List<PostResponseDto>> findAllExceptIndustry(String cnpj) {
+        return ResponseEntity.ok(postService.findAllExceptIndustry(cnpj));
+    }
+
+    @Override
     public ResponseEntity<List<ProductCategory>> findAllProductCategory() {
         return ResponseEntity.ok(postService.findAllProductCategory());
     }
