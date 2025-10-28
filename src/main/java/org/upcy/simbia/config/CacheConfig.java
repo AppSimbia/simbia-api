@@ -26,6 +26,7 @@ public class CacheConfig {
     String[] cachesNames = {
             "postsId",
             "posts",
+            "postsExcept",
             "solicitations",
             "industryId",
             "industryCnpj"

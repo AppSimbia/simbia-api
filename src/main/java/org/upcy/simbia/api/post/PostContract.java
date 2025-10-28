@@ -26,12 +26,19 @@ public interface PostContract {
     @PostMapping
     ResponseEntity<PostResponseDto> create(@Valid @RequestBody PostRequestDto dto);
 
-    @Operation(summary = "List all posts")
+    @Operation(summary = "List all posts by industry CNPJ")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "List of posts successfully returned")
     })
     @GetMapping("/list/{cnpj}")
     ResponseEntity<List<PostResponseDto>> findAllByIndustry(@CNPJ @PathVariable("cnpj") String cnpj);
+
+    @Operation(summary = "List all posts except the industry posts")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "List of posts successfully returned")
+    })
+    @GetMapping("/list/{cnpj}/except")
+    ResponseEntity<List<PostResponseDto>> findAllExceptIndustry(@CNPJ @PathVariable("cnpj") String cnpj);
 
     @Operation(summary = "List all products category")
     @ApiResponses({

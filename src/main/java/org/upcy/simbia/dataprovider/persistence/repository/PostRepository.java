@@ -17,6 +17,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "where p.cactive = '1' and p.cstatus = :status and i.ccnpj = :cnpj", nativeQuery = true)
     List<Post> findAllByIndustry(@Param("cnpj") String cnpj, @Param("status") String status);
 
+    @Query(value = "select p.* from post p " +
+            "join industry i on p.idindustry = i.idindustry " +
+            "where p.cactive = '1' and p.cstatus = :status and i.ccnpj != :cnpj", nativeQuery = true)
+    List<Post> findAllExceptIndustry(@Param("cnpj") String cnpj, @Param("status") String status);
+
     @Override
     @Query(value = "SELECT * FROM post p " +
             "WHERE p.cactive = '1'", nativeQuery = true)

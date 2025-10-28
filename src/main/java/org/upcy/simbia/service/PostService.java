@@ -77,6 +77,13 @@ public class PostService implements CrudService<Post, Long, PostRequestDto, Post
                 .toList();
     }
 
+    @Cacheable("postsExcept")
+    public List<PostResponseDto> findAllExceptIndustry(String cnpj) {
+        return postRepository.findAllExceptIndustry(cnpj, "2").stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public List<Post> findAllSolicitationsByIndustry(String cnpj) {
         return postRepository.findAllByIndustry(cnpj, "1");
     }
