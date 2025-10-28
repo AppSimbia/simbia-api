@@ -27,6 +27,7 @@ public class CacheConfig {
             "postsId",
             "posts",
             "postsExcept",
+            "postsEmployee",
             "solicitations",
             "industryId",
             "industryCnpj"
@@ -50,7 +51,7 @@ public class CacheConfig {
             CaffeineCache cache = new CaffeineCache(cacheName,
                     Caffeine.newBuilder()
                             .maximumSize(15)
-                            .expireAfterWrite(3, TimeUnit.MINUTES)
+                            .expireAfterWrite(1, TimeUnit.MINUTES)
                             .build());
             caches.add(cache);
         }
