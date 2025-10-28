@@ -40,6 +40,13 @@ public interface PostContract {
     @GetMapping("/list/{cnpj}/except")
     ResponseEntity<List<PostResponseDto>> findAllExceptIndustry(@CNPJ @PathVariable("cnpj") String cnpj);
 
+    @Operation(summary = "List all posts except the industry posts")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "List of posts successfully returned")
+    })
+    @GetMapping("/list/{id}/employee")
+    ResponseEntity<List<PostResponseDto>> findAllIndustryByEmployee(@PathVariable("id") Long id);
+
     @Operation(summary = "List all products category")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "List of posts successfully returned")
