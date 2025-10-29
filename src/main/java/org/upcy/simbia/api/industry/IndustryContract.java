@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.upcy.simbia.api.industry.input.IndustryRequestDto;
 import org.upcy.simbia.api.industry.input.LoginIndustryDto;
@@ -16,6 +17,7 @@ import org.upcy.simbia.dataprovider.persistence.entity.IndustryType;
 import java.util.List;
 import java.util.Map;
 
+@Validated
 @RequestMapping("/industries")
 public interface IndustryContract {
 

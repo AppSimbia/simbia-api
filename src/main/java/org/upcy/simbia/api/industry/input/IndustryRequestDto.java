@@ -42,7 +42,7 @@ public class IndustryRequestDto {
     @Email(message = "Invalid email")
     private String contactMail;
 
-    @Schema(example = "12345-678", description = "Industry ZIP code")
+    @Schema(example = "12345678", description = "Industry ZIP code")
     @NotNull(groups = OnCreate.class)
     @Pattern(regexp = "\\d{8}", message = "Invalid ZIP code")
     private String cep;
