@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.upcy.simbia.api.solicitation.input.SolicitationBatchRequestDto;
-import org.upcy.simbia.api.solicitation.input.SolicitationRequestDto;
 import org.upcy.simbia.api.solicitation.output.SolicitationResponseDto;
 
 import java.util.List;

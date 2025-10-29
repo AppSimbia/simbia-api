@@ -2,6 +2,8 @@ package org.upcy.simbia.exception;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +55,16 @@ public class GlobalExceptionHandler {
             message.append(String.format("[%s: %s] ", error.getField(), error.getDefaultMessage()));
         }
         return buildResponse(HttpStatus.BAD_REQUEST, message.toString());
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
+        String errorMessage = ex.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .findFirst()
+                .orElse("Erro de validação desconhecido.");
+
+        return buildResponse(HttpStatus.BAD_REQUEST, errorMessage);
     }
 
     @ExceptionHandler(Exception.class)
