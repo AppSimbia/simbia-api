@@ -12,15 +12,15 @@ import lombok.NoArgsConstructor;
 public class SolicitationResponseDto {
 
     private Long idPost;
-    private Long idIndustry;
-    private String cIndustryName;
-    private String cIndustryImage;
-    private String cImage;
-    private String cTitle;
-    private Integer nQuantity;
-    private String cMeasureUnit;
-    private String cCategoryName;
-    private String cClassification;
-    private String cDescription;
+    private String cnpjIndustry;
+    private String industryName;
+    private String industryImage;
+    private String image;
+    private String title;
+    private Integer quantity;
+    private String measureUnit;
+    private String categoryName;
+    private String classification;
+    private String description;
 
 }

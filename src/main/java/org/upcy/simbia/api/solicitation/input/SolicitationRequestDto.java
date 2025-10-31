@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +14,8 @@ public class SolicitationRequestDto {
     @Schema(description = "ID do post", example = "10")
     private Long idPost;
 
-    @Schema(description = "Algum outro campo", example = "valor")
-    private Long idIndustry;
+    @Schema(description = "CNPJ da indústria compradora", example = "valor")
+    @CNPJ
+    private String cnpjIndustry;
 
 }

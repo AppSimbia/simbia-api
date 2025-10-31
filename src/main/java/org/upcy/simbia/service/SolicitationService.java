@@ -3,10 +3,10 @@ package org.upcy.simbia.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.upcy.simbia.api.industry.output.IndustryResponseDto;
 import org.upcy.simbia.api.solicitation.input.SolicitationBatchRequestDto;
 import org.upcy.simbia.api.solicitation.output.SolicitationData;
 import org.upcy.simbia.api.solicitation.output.SolicitationResponseDto;
-import org.upcy.simbia.dataprovider.persistence.entity.Industry;
 import org.upcy.simbia.dataprovider.persistence.entity.Post;
 import org.upcy.simbia.mapper.SolicitationMapper;
 
@@ -32,8 +32,8 @@ public class SolicitationService {
         });
 
         request.solicitations().forEach(solicitationRequest -> {
-            Industry industry = solicitationRequest.getIdIndustry() == null ?
-                    null : industryService.findEntityById(solicitationRequest.getIdIndustry());
+            IndustryResponseDto industry = solicitationRequest.getCnpjIndustry() == null ?
+                    null : industryService.findIndustryByCnpj(solicitationRequest.getCnpjIndustry());
             Post post = postService.findEntityById(solicitationRequest.getIdPost());
 
             SolicitationData solicitationData = new SolicitationData(post, industry);
