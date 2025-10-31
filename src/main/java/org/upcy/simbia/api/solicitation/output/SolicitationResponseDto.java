@@ -22,11 +22,6 @@ public class SolicitationResponseDto {
     private String categoryName;
     private String classification;
     private String description;
-    private SolicitationType solicitationType;
-
-    public enum SolicitationType{
-        SOLICITATION_POST,
-        SOLICITATION_MATCH
-    }
+    private String solicitationType;
 
 }
