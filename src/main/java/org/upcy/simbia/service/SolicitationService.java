@@ -26,7 +26,7 @@ public class SolicitationService {
         List<SolicitationResponseDto> solicitations = new ArrayList<>();
 
         postService.findAllSolicitationsByIndustry(request.cnpjIndustry()).forEach(post -> {
-            SolicitationData solicitationData = new SolicitationData(post, null, "POST");
+            SolicitationData solicitationData = new SolicitationData(post, null, "POST", null);
             SolicitationResponseDto solicitationResponse = toResponse(solicitationData);
             solicitations.add(solicitationResponse);
         });
@@ -36,7 +36,8 @@ public class SolicitationService {
                     null : industryService.findIndustryByCnpj(solicitationRequest.getCnpjIndustry());
             Post post = postService.findEntityById(solicitationRequest.getIdPost());
 
-            SolicitationData solicitationData = new SolicitationData(post, industry, solicitationRequest.getSolicitationType());
+            SolicitationData solicitationData = new SolicitationData(
+                    post, industry, solicitationRequest.getSolicitationType(), solicitationRequest.getSolicitationText());
             SolicitationResponseDto solicitationResponse = toResponse(solicitationData);
             solicitations.add(solicitationResponse);
         });
