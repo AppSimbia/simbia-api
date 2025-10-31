@@ -21,7 +21,6 @@ public class SolicitationResponseDto {
     private String measureUnit;
     private String categoryName;
     private String classification;
-    private String description;
     private String solicitationType;
     private String solicitationText;
 

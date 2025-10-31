@@ -25,12 +25,12 @@ public class SolicitationMapper extends AbstractMapper<SolicitationData, Solicit
                 .idPost(post.getId())
                 .title(post.getTitle())
                 .categoryName(post.getIdProductCategory().getCategoryName())
-                .description(post.getDescription())
                 .image(post.getImage())
                 .measureUnit(post.getMeasureUnit())
                 .classification(post.getClassification())
                 .quantity(post.getQuantity())
                 .solicitationType(entity.solicitationType())
+                .solicitationText(entity.solicitationText())
                 .build();
     }
 }
