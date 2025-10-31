@@ -24,4 +24,8 @@ public class SolicitationRequestDto {
     @NotNull(message = "O solicitation type não pode ser null")
     private String solicitationType;
 
+    @Schema(description = "Text da Solicitação", example = "valor")
+    @NotNull(message = "O solicitation texto não pode ser null")
+    private String solicitationText;
+
 }

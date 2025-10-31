@@ -23,5 +23,6 @@ public class SolicitationResponseDto {
     private String classification;
     private String description;
     private String solicitationType;
+    private String solicitationText;
 
 }
