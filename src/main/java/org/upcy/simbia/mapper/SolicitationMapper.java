@@ -30,6 +30,7 @@ public class SolicitationMapper extends AbstractMapper<SolicitationData, Solicit
                 .measureUnit(post.getMeasureUnit())
                 .classification(post.getClassification())
                 .quantity(post.getQuantity())
+                .solicitationType(entity.solicitationType())
                 .build();
     }
 }
