@@ -10,6 +10,9 @@ public interface IndustryRepository extends JpaRepository<Industry, Long> {
 
     Optional<Industry> findIndustryByCnpj(String cnpj);
 
+    @Query(value = "SELECT i.* FROM industry as i JOIN employee as e ON e.idindustry = i.idindustry WHERE e.idemployee = ?0", nativeQuery = true)
+    Optional<Industry> findIndustryByIdEmployee(Long id);
+
     @Query(value = "SELECT FN_TableIdGenerator('industry', 'idindustry')", nativeQuery = true)
     Long generateId();
 
