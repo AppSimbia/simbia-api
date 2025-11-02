@@ -45,6 +45,14 @@ public interface IndustryContract {
     @GetMapping("/id/{id}")
     ResponseEntity<IndustryResponseDto> findIndustryById(@PathVariable Long id);
 
+    @Operation(summary = "Get a specific industry by ID employee")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Industry found"),
+            @ApiResponse(responseCode = "404", description = "Industry not found")
+    })
+    @GetMapping("/id/{id}/employee")
+    ResponseEntity<IndustryResponseDto> findIndustryByIdEmployee(@PathVariable Long id);
+
     @Operation(summary = "Get a specific industry by CNPJ")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Industry found"),

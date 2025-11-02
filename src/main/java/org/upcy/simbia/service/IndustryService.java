@@ -139,6 +139,12 @@ public class IndustryService implements CrudService<Industry, Long, IndustryRequ
                 new EntityNotFoundException("Industry not found with CNPJ: " + cnpj)));
     }
 
+    @Cacheable("industryIdEmployee")
+    public IndustryResponseDto findIndustryByIdEmployee(Long id) {
+        return toResponse(industryRepository.findIndustryByIdEmployee(id).orElseThrow(() ->
+                new EntityNotFoundException("Industry not found with Id employee: " + id)));
+    }
+
     private void mapRelationships(Industry industry, IndustryRequestDto dto) {
         IndustryType industryType = industryTypeService.findEntityById(dto.getIdIndustryType());
         Plan plan = planService.findEntityById(1L);
