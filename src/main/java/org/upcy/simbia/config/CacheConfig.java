@@ -20,7 +20,8 @@ public class CacheConfig {
             "categories",
             "plans",
             "planId",
-            "types"
+            "types",
+            "industryIdEmployee"
     };
 
     String[] cachesNames = {
